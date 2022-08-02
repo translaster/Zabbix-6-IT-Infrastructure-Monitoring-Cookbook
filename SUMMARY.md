@@ -1,6 +1,6 @@
-0. Preface
+[Предисловие](preface.md)
 
-1. Installing Zabbix and Getting Started Using the Frontend
+[Глава 1. Установка Zabbix и начало работы с использованием фронтенда](chapter-01.md)
 
 2. Getting Things Ready with Zabbix User Management
 
