@@ -113,36 +113,41 @@ quit
   <tr>
     <td>
     <p><b>Подсказка</b></p>
-<p>Для тех, кому это может понадобиться, Zabbix теперь также поддерживает utf8mb4. Мы изменили utf8 на utf8mb4 в приведенной выше команде, и все будет работать. Для справки проверьте тикет поддержки Zabbix здесь: <a href="https://support.zabbix.com/browse/ZBXNEXT-3706">support.zabbix.com/browse/ZBXNEXT-3706</a>.</p>
+<p>Для тех, кому это может понадобиться, Zabbix теперь также поддерживает <code>utf8mb4</code>. Мы изменили <code>utf8</code> на <code>utf8mb4</code> в приведенной выше команде, и все будет работать. Для справки проверьте тикет поддержки Zabbix здесь: <a href="https://support.zabbix.com/browse/ZBXNEXT-3706">https://support.zabbix.com/browse/ZBXNEXT-3706</a>.</p>
     </td>
   </tr>
 </table>
 
-10. ​	Now we need to import our Zabbix database scheme to our newly created Zabbix database:
+10. Теперь нам нужно импортировать нашу схему базы данных Zabbix в нашу вновь созданную базу данных Zabbix:
 
 ```
 zcat /usr/share/doc/zabbix-sql-scripts/mysql/server.sql.gz | mysql -u zabbix -p zabbix
 ```
 
-**Important Note**
+<table border="1" width="100%" cellpadding="5">
+  <tr>
+    <td>
+    <p><b>Важное замечание</b></p>
+<p>На этом этапе может показаться, что вы застряли и система не отвечает. Однако не волнуйтесь, поскольку импорт схемы SQL займет некоторое время.</p>
+    </td>
+  </tr>
+</table>
 
-At this point, it might look like you are stuck and the system is not responding.
+Теперь мы закончили подготовку нашей стороны MariaDB и готовы перейти к следующему шагу - настройке сервера Zabbix:
 
-Do not worry though as it will just take a while to import the SQL scheme.
+1. Сервер Zabbix настраивается с помощью файла конфигурации сервера Zabbix. Этот файл находится в каталоге `/etc/zabbix/`. Давайте откроем этот файл с помощью нашего любимого редактора; я буду использовать Vim на протяжении всей книги:
 
-We are now done with the preparations for our MariaDB side and are ready to move on to the next step, which will be configuring the Zabbix server:
+```
+vim /etc/zabbix/zabbix_server.conf
+```
 
-1. ​	The Zabbix server is configured using the Zabbix server config file. This file is located in /etc/zabbix/. Let's open this file with our favorite editor; I'll be using Vim throughout the book:
+2. Теперь убедитесь, что следующие строки в файле соответствуют имени вашей базы данных, имени пользователя базы данных и паролю пользователя базы данных:
 
-**vim /etc/zabbix/zabbix_server.conf**
-
-2. ​	Now, make sure the following lines in the file match your database name, database user username, and database user password:
-
+```
 DBName=zabbix
-
 DBUser=zabbix
-
 DBPassword=password
+```
 
 **Tip**
 
