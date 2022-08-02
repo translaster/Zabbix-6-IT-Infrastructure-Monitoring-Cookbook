@@ -149,150 +149,167 @@ DBUser=zabbix
 DBPassword=password
 ```
 
-**Tip**
+<table border="1" width="100%" cellpadding="5">
+  <tr>
+    <td>
+    <p><b>Подсказка</b></p>
+<p>Перед запуском сервера Zabbix необходимо настроить SELinux или AppArmor, чтобы разрешить использование сервера Zabbix. Если это тестовая машина, вы можете использовать разрешающую позицию для SELinux или отключить AppArmor, но рекомендуется не делать этого в производстве.</p>
+</td>
+</tr>
+</table>
 
-Before starting the Zabbix server, you should configure SELinux or AppArmor to allow the use of the Zabbix server. If this is a test machine, you can use a permissive stance for SELinux or disable AppArmor, but it is recommended to not do this in production.
+3.	Все готово; теперь мы готовы запустить наш сервер Zabbix:
 
-3.	All done; we are now ready to start our Zabbix server:
+```
+systemctl enable zabbix-server
+systemctl start zabbix-server
+```
 
-**systemctl enable zabbix-server**
+4. Проверьте, все ли запускается, как ожидалось, следующим образом: `systemctl status zabbix-server`.
 
-**systemctl start zabbix-server**
+5. В качестве альтернативы просмотрите файл журнала, в котором содержится подробное описание процесса запуска Zabbix:
 
-4. ​	Check whether everything is starting up as expected with the following: **systemctl status zabbix-server**
+```
+tail -f /var/log/zabbix/zabbix_server.log
+```
 
-5. ​	Alternatively, monitor the log file, which provides a detailed description of the Zabbix startup process:
+6. Большинство сообщений в этом файле в порядке, и их можно спокойно игнорировать, но обязательно хорошо прочитайте и посмотрите, нет ли проблем с запуском вашего сервера Zabbix.
 
-**tail -f /var/log/zabbix/zabbix_server.log**
+### Как это работает...
 
-6. ​	Most of the messages in this file are fine and can be ignored safely, but make sure to read well and see if there are any issues with your Zabbix server starting.
+Сервер Zabbix - это основной процесс нашей установки Zabbix. Он отвечает за мониторинг, оповещение о проблемах и многие другие задачи, описанные в этой книге. Полный стек Zabbix состоит как минимум из следующего:
 
-### How it works…
+* База данных (MySQL, PostgreSQL или Oracle)
 
-The Zabbix server is the main process for our Zabbix setup. It is responsible for our monitoring, problem alerting, and a lot of the other tasks described in this book. A complete Zabbix stack consists of at least the following:
+* сервер Zabbix
 
-1. A database (MySQL, PostgreSQL, or Oracle)
+* Apache или NGINX, на котором запущен фронтенд Zabbix с PHP 7.2+, но PHP 8 в настоящее время не поддерживается.
 
-1. A Zabbix server
-
-
-
-1. ​	Apache or NGINX running the Zabbix frontend with PHP 7.2+, but PHP 8 is currently not supported
-
-6	Installing Zabbix and Getting Started Using the Frontend
-
-We can see the components and how they communicate with each other in the following figure:
+Мы можем увидеть компоненты и то, как они взаимодействуют друг с другом, на следующем рисунке:
 
 ![img](pics/pic1-1.jpeg)
 
-Figure 1.1 – Zabbix setup communications diagram
+Рисунок 1.1 - Диаграмма коммуникаций при настройке Zabbix
 
-We've just set up the Zabbix server and database; by running these two, we are basically ready to start monitoring. The Zabbix server communicates with the Zabbix database to write collected values to it.
+Мы только что настроили сервер Zabbix и базу данных; запустив их, мы практически готовы начать мониторинг. Сервер Zabbix взаимодействует с базой данных Zabbix для записи в нее собранных значений.
 
-There is still one problem though: we cannot configure our Zabbix server to do anything.
+Однако остается одна проблема: мы не можем подключить наш сервер Zabbix к базе данных.
 
-For this, we are going to need our Zabbix frontend, which we'll set up in the next recipe.
+Для этого нам понадобится наш фронтенд Zabbix, который мы настроим в следующем рецепте.
 
-**Setting up the Zabbix frontend**
+## Настройка фронтенда Zabbix
 
-The Zabbix frontend is the face of our server. It's where we will configure all of our hosts, templates, dashboards, maps, and everything else. Without it, we would be blind to what's going on, on the server side. So, let's set up our Zabbix frontend in this recipe.
+Фронтенд Zabbix - это лицо нашего сервера. Это место, куда мы будем подключать все наши хосты, шаблоны, приборные панели, карты и все остальное. Без него мы были бы слепы к тому, что происходит на стороне сервера. Итак, давайте настроим наш фронтенд Zabbix в этом рецепте.
 
-**Getting ready**
+### Готовность
 
-We are going to set up the Zabbix frontend using Apache. Before starting with this recipe, make sure you are running the Zabbix server on a Linux distribution of your choice. I'll be using the lar-book-centos and lar-book-ubuntu hosts in these recipes to show the setup process on CentOS 8 and Ubuntu 20.
+Мы собираемся настроить фронтенд Zabbix с помощью Apache. Прежде чем приступить к этому рецепту, убедитесь, что вы запустили сервер Zabbix на выбранном вами дистрибутиве Linux. В этих рецептах я буду использовать хосты `lar-book-centos` и `lar-book-ubuntu`, чтобы показать процесс настройки на CentOS 8 и Ubuntu 20.
 
-Setting up the Zabbix frontend	7
+### Как это сделать...
 
-**How to do it…**
+1. Давайте сразу же приступим к установке фронтенда. Для начала работы выполните следующую команду.
 
-1. ​	Let's jump right in and install the frontend. Issue the following command to get started.
+Для систем на базе RHEL:
 
-For RHEL-based systems:
+```
+dnf install zabbix-web-mysql zabbix-apache-conf
+```
 
-**dnf install zabbix-web-mysql zabbix-apache-conf**
+Для систем на базе Ubuntu:
 
-For Ubuntu systems:
+```
+apt install zabbix-frontend-php zabbix-apache-conf
+```
 
-**apt install zabbix-frontend-php zabbix-apache-conf**
+<table border="1" width="100%" cellpadding="5">
+  <tr>
+    <td>
+    <p><b>Подсказка</b></p>
+<p>Не забудьте разрешить порты 80 и 443 в вашем брандмауэре, если вы его используете. Без этого вы не сможете подключиться к фронтенду.</p>
+    </td>
+  </tr>
+</table>
 
-**Tip**
+2. Перезапустите компоненты Zabbix и убедитесь, что они запускаются при загрузке сервера, выполнив следующие действия.
 
-Don't forget to allow ports 80 and 443 in your firewall if you are using one.
+Для систем на базе RHEL:
 
-Without this, you won't be able to connect to the frontend.
+```
+systemctl enable httpd php-fpm
+systemctl restart zabbix-server httpd php-fpm
+```
 
-1. ​	Restart the Zabbix components and make sure they start up when the server is booted with the following.
+Для систем на базе Ubuntu:
 
-For RHEL-based systems:
+```
+systemctl enable apache2
+systemctl restart zabbix-server apache2
+```
 
-**systemctl enable httpd php-fpm**
-**systemctl restart zabbix-server httpd php-fpm**
+3. Теперь мы должны быть в состоянии перейти к нашему фронтенду Zabbix без каких-либо проблем и начать последние шаги по настройке фронтенда Zabbix.
 
-For Ubuntu systems:
+4. Откроем браузер и перейдем к IP-адресу нашего сервера. Он должен выглядеть следующим образом:
 
-**systemctl enable apache2**
-**systemctl restart zabbix-server apache2**
+```
+http://<ваш_сервер_ip>/zabbix
+```
 
-1. ​	We should now be able to navigate to our Zabbix frontend without any issues and start the final steps to set up the Zabbix frontend.
-
-1. Let's go to our browser and navigate to our server's IP. It should look like this:
-
-http://<your_server_ip>/zabbix
-
-5.	We should now see the following web page:
+5.	Теперь мы должны увидеть следующую веб-страницу:
 
 ![img](pics/pic-1-2.jpeg)
 
-Figure 1.2 – The Zabbix welcome screen
+Рисунок 1.2 - Экран приветствия Zabbix
 
 If you don't see this web page, it's possible you have missed some steps in the setup process. Retrace your steps and double-check your configuration files; even the smallest typo could prevent the web page from serving.
 
-1. ​		Let's 	continue by clicking **Next 	step** 	on this page, which will serve you with the next page:
+6. ​		Let's 	continue by clicking **Next 	step** 	on this page, which will serve you with the next page:
 
 ![img](pics/pic1-3.jpeg)
 
-Figure 1.3 – The Zabbix installation pre-requisites page
+Рисунок 1.3 – The Zabbix installation pre-requisites page
 
-1. ​	Every single option here should be showing **OK** now; if not, fix the mistake it's showing you. If everything is **OK**, you may proceed by clicking **Next step** again, which will take you to the next page:
+7. ​	Every single option here should be showing **OK** now; if not, fix the mistake it's showing you. If everything is **OK**, you may proceed by clicking **Next step** again, which will take you to the next page:
 
 ![img](pics/pic1-4.jpeg)
 
-Figure 1.4 – The Zabbix installation DB connection page
+Рисунок 1.4 – The Zabbix installation DB connection page
 
-1. ​	Here, we need to tell our Zabbix frontend where our MySQL database is located. Since we installed it on **localhost**, we just need to make sure we issue the right database name, database user username, and database user password.
+8. ​	Here, we need to tell our Zabbix frontend where our MySQL database is located. Since we installed it on **localhost**, we just need to make sure we issue the right database name, database user username, and database user password.
 
-1. ​	This should make the Zabbix frontend able to communicate with the database. Let's proceed by clicking **Next step** again:
+9. ​	This should make the Zabbix frontend able to communicate with the database. Let's proceed by clicking **Next step** again:
 
 ![img](pics/pic1-5.jpeg)
 
-​Figure 1.5 – The Zabbix installation server details page
+​Рисунок 1.5 – The Zabbix installation server details page
 
 Next up is the Zabbix server configuration. Make sure to name your server something useful or something cool. For example, I've set up a production server called Meeseeks because every time we got an alert, we could make Zabbix say *"I'm Mr. Meeseeks look at me."* But something like zabbix.example.com also works.
 
-1. ​		Let's 	name our server, set up the time zone to match our own time zone 	and proceed to the next step:
+10. ​		Let's 	name our server, set up the time zone to match our own time zone 	and proceed to the next step:
 
 ![img](pics/pic1-6.jpeg)
 
-Figure 1.6 – The Zabbix installation summary page
+Рисунок 1.6 – The Zabbix installation summary page
 
-\11. Verify your settings and proceed to click **Next step** one more time.
+11. Verify your settings and proceed to click **Next step** one more time.
 
 ![img](pics/pic1-7.jpeg)
 
-Figure 1.7 – The Zabbix installation finish page
+Рисунок 1.7 – The Zabbix installation finish page
 
-1. ​	You have successfully installed the Zabbix frontend. You may now click the **Finish** button and we can start using the frontend. You'll be served with a login page where you can use the following default credentials:
+12. ​	You have successfully installed the Zabbix frontend. You may now click the **Finish** button and we can start using the frontend. You'll be served with a login page where you can use the following default credentials:
 
+```
 Username: Admin
 Password: zabbix
+```
 
 **How it works…**
 
-Now that we've installed our Zabbix frontend, our Zabbix setup is complete and we are ready to start working with it. Our Zabbix frontend will connect to our database to edit the configuration values of our setup, as we can see in the following figure:
+Now that we've installed our Zabbix frontend, our Zabbix setup is complete and we are ready to start working with it. Our Zabbix frontend will connect to our database to edit the configuration values of our setup, as we can see in the following Рисунок:
 
-![img](file:///tmp/lu258424lw1ev.tmp/lu258424lw1fm_tmp_c283f97a0d2ba8ce.jpg)
+![img](pics/pic1-8.jpeg)
 
-Figure 1.8 – Zabbix setup communications diagram
+Рисунок 1.8 – Zabbix setup communications diagram
 
 The Zabbix frontend will also talk to our Zabbix server, but this is just to make sure the Zabbix server is up and running. Now that we know how to set up the Zabbix frontend, we can start using it. Let's check this out after the next recipe.
 
@@ -340,575 +357,190 @@ For your convenience, we've split this *How to do it…* section into three part
 
 **Setting up the database**
 
-
-
 Let's start with setting up our Zabbix database, ready to be used in a highly available
-
-
 
 Zabbix server setup:
 
-
-
 1. ​	Log in to lar-book-ha-db and install the MariaDB repository with the following command on RedHat based systems:
 
-
-
-
-
 **wget https://downloads.mariadb.com/MariaDB/mariadb_repo_ setup**
-
-
-
-
-
 **chmod +x mariadb_repo_setup**
-
-
-
-
-
 **./mariadb_repo_setup**
-
-
 
 2.	Then, let's install the MariaDB server application with the following command.
 
-
-
 For RHEL-based systems:
 
-
-
-
-
 **dnf install mariadb-server**
-
-
-
-
-
 **systemctl enable mariadb**
-
-
-
-
-
 **systemctl start mariadb**
-
-
 
 For Ubuntu systems:
 
-
-
-
-
 **apt install mariadb-server**
-
-
-
-
-
 **systemctl enable mariadb**
-
-
-
-
-
 **systemctl start mariadb**
 
-
-
 1. ​	After installing MariaDB, make sure to secure your installation with the following command:
-
-
-
-​
-
 
 **/usr/bin/mariadb_secure_installation**
 
 1. ​	Installing Zabbix and Getting Started Using the Frontend
 
-
-
-1. 1. ​		Make 	sure to answer the questions with yes (Y) 	and configure a root password that's secure. It's highly 	recommended to use a password vault for storing it.
-
-
+1. 1. ​		Make 	sure to answer the questions with yes (Y) 	and conРисунок a root password that's secure. It's highly 	recommended to use a password vault for storing it.
 
 1. 1. ​		Now 	let's create our Zabbix database for our Zabbix servers to connect 	to. Log in to MariaDB with the following command:
 
-
-
-
-
 **mysql -u root -p**
-
-
 
 1. ​	Enter the password you set up during the secure installation and create the Zabbix database with the following commands. Do not forget to change the password in the second, third, and fourth commands:
 
-
-
-
-
 **create database zabbix character set utf8mb4 collate utf8mb4_bin;**
-
-
-
-
-
 **create user zabbix@'192.168.0.1' identified by 'password';**
-
-
-
-
-
 **create user zabbix@'192.168.0.2' identified by 'password';**
-
-
-
-
-
 **create user zabbix@'192.168.0.5' identified by 'password';**
-
-
-
-
-
 **grant all privileges on zabbix.\* to 'zabbix'@'192.168.0.1' identified by 'password';**
-
-
-
-
-
 **grant all privileges on zabbix.\* to 'zabbix'@'192.168.0.2' identified by 'password';**
-
-
-
-
-
 **grant all privileges on zabbix.\* to 'zabbix'@'192.168.0.5' identified by 'password';**
-
-
-
-
-
 **flush privileges;**
-
-
-
-
-
 **quit**
-
-
 
 1. ​	Lastly, we need to import the initial Zabbix database configuration, but for that, we need to install the Zabbix repository.
 
-
-
 For RHEL-based systems:
 
-
-
-
-
 **rpm -Uvh https://repo.zabbix.com/zabbix/6.0/rhel/8/ x86_64/zabbix-release-6.0-1.el8.noarch.rpm**
-
-
-
-
-
 **dnf clean all**
-
-
 
 For Ubuntu systems:
 
-
-
-​
-
-
-​	**wget https://repo.zabbix.com/zabbix/6.0/ubuntu/pool/ main/z/zabbix-release/zabbix-release_6.0-1+ubuntu20.04_ all.deb**
-
-Enabling Zabbix server high availability	15
-
-
-
-
-
+**wget https://repo.zabbix.com/zabbix/6.0/ubuntu/pool/ main/z/zabbix-release/zabbix-release_6.0-1+ubuntu20.04_ all.deb**
 **dpkg -i zabbix-release_6.0-1+ubuntu20.04_all.deb apt update**
-
-
-
-
 
 1. ​	Then, we need to install the SQL scripts Zabbix module. For RHEL-based systems:
 
 **dnf install zabbix-sql-scripts**
 
-
-
 For Ubuntu systems:
-
-
 
 **apt install zabbix-sql-scripts**
 
-
-
 1. ​	Then, we issue the following command, which might take a while so be patient until it is done:
 
-
-
-
-
 **zcat /usr/share/doc/zabbix-sql-scripts/mysql/server.sql. gz | mysql -uroot -p zabbix**
-
-
-
 **Setting up the Zabbix server cluster nodes**
-
-
 
 Setting up the cluster nodes works in the same way as setting up any new Zabbix server.
 
-
-
 The only difference is that we will need to specify some new configuration parameters.
-
-
 
 1. ​	Let's start by adding the Zabbix 6.0 repository to our systems lar-book-ha1 and lar-book-ha2:
 
-
-
-
-
 **rpm -Uvh https://repo.zabbix.com/zabbix/6.0/rhel/8/ x86_64/zabbix-release-6.0-1.el8.noarch.rpm**
-
-
-
-
-
 **dnf clean all**
-
-
 
 For Ubuntu systems, use the following command:
 
-
-
-
-
 **wget https://repo.zabbix.com/zabbix/6.0/ubuntu/pool/ main/z/zabbix-release/zabbix-release_6.0-1+ubuntu20.04_ all.deb**
-
-
-
-
-
 **dpkg -i zabbix-release_6.0-1+ubuntu20.04_all.deb apt update**
-
-
-
-
 
 1. ​	Now let's install the Zabbix server application with the following command. For RHEL-based systems:
 
 **dnf install zabbix-server-mysql**
 
-
-
 For Ubuntu systems:
-
-
-
-​
-
 
 **apt install zabbix-server-mysql**
 
 1. ​	Installing Zabbix and Getting Started Using the Frontend
 
-
-
 1. 1. ​		We 	will now edit the Zabbix server configuration files, starting with 	lar-book-ha1. 	Issue the following command:
-
-
-
-
 
 **vim /etc/zabbix/zabbix_server.conf**
 
-
-
 4.	Then, add the following lines to allow a database connection:
 
-
-
-
-
 **DBHost=192.168.0.10**
-
-
-
-
-
 **DBPassword=password**
 
-
-
 1. To enable high availability on this host, add the following lines in the same file:
-
-
 
 **HANodeName=lar-book-ha1**
 
-
-
 1. ​	To make sure our Zabbix frontend knows where to connect to if there is a node fail over, fill in the following:
-
-
-
-
 
 **NodeAddress=192.168.0.1**
 
-
-
 1. ​	Save the file and let's do the same for our lar-book-ha2 host by editing its file: **vim /etc/zabbix/zabbix_server.conf**
-
-
 
 1. Then, add the following lines to allow a database connection:
 
-
-
-
-
 **DBHost=192.168.0.10**
-
-
-
-
-
 **DBPassword=password**
-
-
 
 1. To enable high availability on this host, add the following lines in the same file:
 
-
-
 **HANodeName=lar-book-ha2**
-
-
 
 1. ​	To make sure our Zabbix frontend knows where to connect to if there is a node fail over, fill in the following:
 
-
-
-
-
 **NodeAddress=192.168.0.2**
-
-
 
 \11. Save the file and let's start our Zabbix server:
 
-
-
-
-
 **systemctl enable zabbix-server**
-
-
-
-
-
 **systemctl start zabbix-server**
-
-Enabling Zabbix server high availability	17
-
-
-
-
-
 **Setting up Apache with high availability**
-
-
 
 To make sure our frontend is also set up in such a way that if one Zabbix server has issues it fails over, we will set them up with keepalived. Let's see how we can do this.
 
-
-
 1. ​	Let's start by logging in to both lar-book-ha1 and lar-book-ha2 and installing keepalived.
-
-
 
 For RHEL-based systems:
 
-
-
 **dnf install -y keepalived**
-
-
 
 For Ubuntu systems:
 
-
-
 **apt install keepalived**
-
-
 
 1. ​	Then, on lar-book-ha1, edit the keepalived configuration with the following command:
 
-
-
-
-
 **vim /etc/keepalived/keepalived.conf**
-
-
 
 3.	Delete everything from this file and add the following text to the file:
 
-
-
-
-
 vrrp_track_process chk_apache_httpd { process httpd
-
-
 
 weight 10
 
-
-
-
-
 }
-
-
-
-
 
 vrrp_instance ZBX_1 {
-
-
-
-
-
 state MASTER
-
-
-
-
-
 interface ens192
-
-
-
-
-
 virtual_router_id 51
-
-
-
-
-
 priority 244
-
-
-
-
-
 advert_int 1
 
-
-
-
-
 authentication {
-
-
-
-
-
 auth_type PASS
-
-
-
-
-
 auth_pass password
-
-
-
-
-
 }
-
-
-
-
 
 track_process {
-
-
-
-
-
 chk_apache_httpd
-
-
-
-
-
 }
-
-
-
-
 
 virtual_ipaddress {
-
-18	Installing Zabbix and Getting Started Using the Frontend
-
-
-
-
-
 192.168.0.5/24
-
-
-
-
-
 }
 
-
-
-
-
 }
-
-
 
 1. ​	Do not forget to update password to something secure and edit the interface ens192 to your own interface name/number. For Ubuntu, change httpd to apache2.
 
-
-
-
-
 **Important Note**
-
-
-
 In the previous file, we specified virtual_router_id 51. make sure the virtual router ID 51 isn't used anywhere in the network yet. If it is, simply change the virtual router ID throughout this recipe.
 
 
@@ -1079,7 +711,7 @@ For Ubuntu systems:
 
 
 
-1. ​	Then, we are ready to configure our Zabbix frontend. Navigate to your virtual IP address (in the example IP case, http://192.168.0.5/zabbix) and you will see the following page:
+1. ​	Then, we are ready to conРисунок our Zabbix frontend. Navigate to your virtual IP address (in the example IP case, http://192.168.0.5/zabbix) and you will see the following page:
 
 ![img](file:///tmp/lu258424lw1ev.tmp/lu258424lw1fm_tmp_39dc74b2e1913e44.jpg)
 
@@ -1137,7 +769,7 @@ For Ubuntu systems:
 
 
 
-​	Figure 1.9 – The Zabbix initial configuration window
+​	Рисунок 1.9 – The Zabbix initial configuration window
 
 20	Installing Zabbix and Getting Started Using the Frontend
 
@@ -1217,7 +849,7 @@ For Ubuntu systems:
 
 
 
-Figure 1.10 – The Zabbix database configuration window for lar-book-ha1
+Рисунок 1.10 – The Zabbix database configuration window for lar-book-ha1
 
 
 
@@ -1283,7 +915,7 @@ Figure 1.10 – The Zabbix database configuration window for lar-book-ha1
 
 
 
-Figure 1.11 – The Zabbix server settings window for lar-book-ha1
+Рисунок 1.11 – The Zabbix server settings window for lar-book-ha1
 
 Enabling Zabbix server high availability	21
 
@@ -1365,7 +997,7 @@ For Ubuntu systems:
 
 
 
-Figure 1.12 – The Zabbix database configuration window for lar-book-ha2
+Рисунок 1.12 – The Zabbix database configuration window for lar-book-ha2
 
 1. ​	Installing Zabbix and Getting Started Using the Frontend
 
@@ -1401,7 +1033,7 @@ Figure 1.12 – The Zabbix database configuration window for lar-book-ha2
 
 
 
-Figure 1.13 – The Zabbix server settings window for lar-book-ha2
+Рисунок 1.13 – The Zabbix server settings window for lar-book-ha2
 
 
 
@@ -1475,7 +1107,7 @@ Enabling Zabbix server high availability	23
 
 
 
-Figure 1.14 – The Zabbix server system information with HA information
+Рисунок 1.14 – The Zabbix server system information with HA information
 
 
 
@@ -1535,7 +1167,7 @@ Furthermore, we can see every single node in our cluster. As Zabbix now supports
 
 
 
-​	Figure 1.15 – The Zabbix server HA setup
+​	Рисунок 1.15 – The Zabbix server HA setup
 
 24	Installing Zabbix and Getting Started Using the Frontend
 
@@ -1643,7 +1275,7 @@ To get started with the Zabbix UI, all we need to do is log in to the frontend. 
 
 
 
-Figure 1.16 – The Zabbix login screen
+Рисунок 1.16 – The Zabbix login screen
 
 
 
@@ -1721,7 +1353,7 @@ After you log in, you'll be served with the default page, which is the default d
 
 
 
-Figure 1.17 – The Global view dashboard
+Рисунок 1.17 – The Global view dashboard
 
 
 
@@ -1787,7 +1419,7 @@ Using the Zabbix frontend	27
 
 
 
-Figure 1.18 – The System information widget
+Рисунок 1.18 – The System information widget
 
 
 
@@ -1896,7 +1528,7 @@ Let's move on to the next widget, **Host availability**:
 
 
 
-​	Figure 1.19 – The Host availability widget
+​	Рисунок 1.19 – The Host availability widget
 
 Using the Zabbix frontend	29
 
@@ -1996,7 +1628,7 @@ The next widget is **Local**:
 
 
 
-​	Figure 1.20 – The Local widget, indicating a time
+​	Рисунок 1.20 – The Local widget, indicating a time
 
 30	Installing Zabbix and Getting Started Using the Frontend
 
@@ -2028,7 +1660,7 @@ It's a clock with the local Linux system time. Need I say more? Let's move on to
 
 
 
-Figure 1.21 – One of the Problems widgets available
+Рисунок 1.21 – One of the Problems widgets available
 
 
 
@@ -2156,7 +1788,7 @@ Using the Zabbix frontend	31
 
 
 
-Figure 1.22 – The Edit widget screen
+Рисунок 1.22 – The Edit widget screen
 
 
 
@@ -2198,7 +1830,7 @@ Now, there are two more widgets that are completely empty on our default dashboa
 
 
 
-Figure 1.23 – The Favourite widgets
+Рисунок 1.23 – The Favourite widgets
 
 
 
@@ -2290,7 +1922,7 @@ Let's take a look at the Zabbix sidebar as we see it from our default page and g
 
 
 
-Figure 1.24 – The default Zabbix page as seen in your own web browser
+Рисунок 1.24 – The default Zabbix page as seen in your own web browser
 
 
 
@@ -2360,7 +1992,7 @@ You'll go over all of these quite a lot while using this book, so remember them 
 
 
 
-Figure 1.25 – The Monitoring section of the sidebar
+Рисунок 1.25 – The Monitoring section of the sidebar
 
 
 
@@ -2368,7 +2000,7 @@ The **Monitoring** tab contains the following pages:
 
 
 
-1. ​	**Dashboard**: This is where you will find the default dashboard we showed in *Figure 1.24*. It is also where we can add many more dashboards for everything we can think of.
+1. ​	**Dashboard**: This is where you will find the default dashboard we showed in *Рисунок 1.24*. It is also where we can add many more dashboards for everything we can think of.
 
 
 
@@ -2426,7 +2058,7 @@ Next, we have the **Services** category:
 
 
 
-Figure 1.26 – The Services section of the sidebar
+Рисунок 1.26 – The Services section of the sidebar
 
 
 
@@ -2434,19 +2066,19 @@ This part of the sidebar contains the following pages:
 
 
 
-1. **Services**: This is where we configure all of our services that we want to monitor.
+1. **Services**: This is where we conРисунок all of our services that we want to monitor.
 
 
 
-1. ​	**Service actions**: The section where we can set up any actions for our configured services. You'll find options like sending our notifications for SLAs and more.
+1. ​	**Service actions**: The section where we can set up any actions for our conРисунокd services. You'll find options like sending our notifications for SLAs and more.
 
 
 
-1. **SLA**: We can configure any SLAs here that we can then use in our services.
+1. **SLA**: We can conРисунок any SLAs here that we can then use in our services.
 
 
 
-1. ​	**SLA report**: A detailed overview of configured services with their SLAs and if they are being met or not.
+1. ​	**SLA report**: A detailed overview of conРисунокd services with their SLAs and if they are being met or not.
 
 
 
@@ -2470,7 +2102,7 @@ Then, we have the **Inventory** category:
 
 
 
-Figure 1.27 – The Inventory section of the sidebar
+Рисунок 1.27 – The Inventory section of the sidebar
 
 
 
@@ -2534,7 +2166,7 @@ Next, we have the **Reports** category:
 
 
 
-Figure 1.28 – The Reports section of the sidebar
+Рисунок 1.28 – The Reports section of the sidebar
 
 
 
@@ -2546,7 +2178,7 @@ The **Reports** tab contains the following pages:
 
 
 
-1. ​	**Scheduled reports**: This is where we configure any automatic PDF reporting that we might want to send out.
+1. ​	**Scheduled reports**: This is where we conРисунок any automatic PDF reporting that we might want to send out.
 
 
 
@@ -2616,7 +2248,7 @@ Next, we have the **Configuration** category:
 
 
 
-Figure 1.29 – The Configuration section of the sidebar
+Рисунок 1.29 – The Configuration section of the sidebar
 
 
 
@@ -2624,15 +2256,15 @@ The **Configuration** tab contains the following pages:
 
 
 
-1. ​	**Host groups**: We configure our host groups here; for instance, a group for all *Linux servers*.
+1. ​	**Host groups**: We conРисунок our host groups here; for instance, a group for all *Linux servers*.
 
 
 
-1. ​	**Templates**: This is where we configure our templates that we can use to monitor hosts from the Zabbix server.
+1. ​	**Templates**: This is where we conРисунок our templates that we can use to monitor hosts from the Zabbix server.
 
 
 
-1. ​	**Hosts**: Another hosts tab, but this time it is not for checking the data. This is where we add and configure host settings.
+1. ​	**Hosts**: Another hosts tab, but this time it is not for checking the data. This is where we add and conРисунок host settings.
 
 
 
@@ -2640,7 +2272,7 @@ The **Configuration** tab contains the following pages:
 
 
 
-1. ​	**Actions**: Remember how I mentioned we can configure actions for when a trigger changes state? This is where we configure those actions.
+1. ​	**Actions**: Remember how I mentioned we can conРисунок actions for when a trigger changes state? This is where we conРисунок those actions.
 
 
 
@@ -2648,7 +2280,7 @@ The **Configuration** tab contains the following pages:
 
 
 
-1. **Discovery**: This is where we configure Zabbix discovery for automatic host creation.
+1. **Discovery**: This is where we conРисунок Zabbix discovery for automatic host creation.
 
 38	Installing Zabbix and Getting Started Using the Frontend
 
@@ -2708,7 +2340,7 @@ Finally, we have the **Administration** category:
 
 
 
-Figure 1.30 – The Administration section of the sidebar
+Рисунок 1.30 – The Administration section of the sidebar
 
 
 
@@ -2720,7 +2352,7 @@ The **Administration** tab contains the following pages:
 
 
 
-1. ​	**Proxies**: This is where we configure proxies that should be connected to this Zabbix server.
+1. ​	**Proxies**: This is where we conРисунок proxies that should be connected to this Zabbix server.
 
 
 
@@ -2728,11 +2360,11 @@ The **Administration** tab contains the following pages:
 
 
 
-1. ​	**User groups**: This is where we configure user groups and the permissions for these user groups.
+1. ​	**User groups**: This is where we conРисунок user groups and the permissions for these user groups.
 
 
 
-1. ​	**User roles**: It's possible to configure different users' roles here, to limit or extend certain frontend functionality to certain users.
+1. ​	**User roles**: It's possible to conРисунок different users' roles here, to limit or extend certain frontend functionality to certain users.
 
 
 
@@ -2740,7 +2372,7 @@ The **Administration** tab contains the following pages:
 
 
 
-1. ​	**Media types**: There are several media types pre-configured in Zabbix, which you'll find here already. We can also add custom media types.
+1. ​	**Media types**: There are several media types pre-conРисунокd in Zabbix, which you'll find here already. We can also add custom media types.
 
 Navigating the frontend	39
 
@@ -2762,7 +2394,7 @@ Navigating the frontend	39
 
 
 
-When using Zabbix authentication such as HTTP, LDAP, or SAML, we still need to create our users internally with the right permissions. Configure your users to match your authentication method's username in Zabbix and use the authentication method for password management. Keep an eye on the following Zabbix case to see updates on the implementation or leave a vote:
+When using Zabbix authentication such as HTTP, LDAP, or SAML, we still need to create our users internally with the right permissions. ConРисунок your users to match your authentication method's username in Zabbix and use the authentication method for password management. Keep an eye on the following Zabbix case to see updates on the implementation or leave a vote:
 
 
 
