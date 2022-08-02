@@ -83,23 +83,23 @@ systemctl start mariadb
 
 `/usr/bin/mariadb-secure-installation`
 
-5. ​	Make sure to answer the questions with yes (Y) and configure a root password that's secure.
+5. Обязательно отвечайте на вопросы "Yes" (Y) и настройте надежный пароль root.
 
-6. ​	Run through the secure installation setup and make sure to save your password somewhere. It's highly recommended to use a password vault.
+6. Выполните настройку безопасной установки и обязательно сохраните где-нибудь свой пароль. Настоятельно рекомендуется использовать хранилище паролей.
 
-7. ​	Now, let's install our Zabbix server with MySQL support. For RHEL-based systems:
+7. Теперь давайте установим наш сервер Zabbix с поддержкой MySQL. Для систем на базе RHEL:
 
 `dnf install zabbix-server-mysql zabbix-sql-scripts`
 
-For Ubuntu systems:
+Для Ubuntu систем:
 
 `apt install zabbix-server-mysql zabbix-sql-scripts`
 
-8. ​	With the Zabbix server installed, we are ready to create our Zabbix database. Log in to MariaDB with the following:
+8. После установки сервера Zabbix мы готовы к созданию базы данных Zabbix. Войдите в MariaDB со следующими параметрами:
 
 `mysql -u root -p`
 
-9. ​	Enter the password you set up during the secure installation and create the Zabbix database with the following commands. Do not forget to change password in the second command:
+9. Введите пароль, который вы установили во время безопасной установки, и создайте базу данных Zabbix с помощью следующих команд. Не забудьте изменить `password` во второй команде:
 
 ```
 create database zabbix character set utf8mb4 collate utf8mb4_bin;
@@ -109,9 +109,14 @@ flush privileges;
 quit
 ```
 
-**Tip**
-
-For those who might require it, Zabbix does also support utf8mb4 now. We've changed utf8 to utf8mb4 in the command above and everything will work. For a reference, check the Zabbix support ticket here: [https://](https://support.zabbix.com/browse/ZBXNEXT-3706) [support.zabbix.com/browse/ZBXNEXT-3706](https://support.zabbix.com/browse/ZBXNEXT-3706).
+<table border="1" width="100%" cellpadding="5">
+  <tr>
+    <td>
+    <p><b>Подсказка</b></p>
+<p>Для тех, кому это может понадобиться, Zabbix теперь также поддерживает utf8mb4. Мы изменили utf8 на utf8mb4 в приведенной выше команде, и все будет работать. Для справки проверьте тикет поддержки Zabbix здесь: <a href="https://support.zabbix.com/browse/ZBXNEXT-3706">support.zabbix.com/browse/ZBXNEXT-3706</a>.</p>
+    </td>
+  </tr>
+</table>
 
 10. ​	Now we need to import our Zabbix database scheme to our newly created Zabbix database:
 
