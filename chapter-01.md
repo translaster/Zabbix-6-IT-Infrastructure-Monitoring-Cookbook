@@ -256,241 +256,294 @@ http://<ваш_сервер_ip>/zabbix
 
 5.	Теперь мы должны увидеть следующую веб-страницу:
 
-![img](pics/pic-1-2.jpeg)
+![img](pics/pic1-2.jpeg)
 
 Рисунок 1.2 - Экран приветствия Zabbix
 
-If you don't see this web page, it's possible you have missed some steps in the setup process. Retrace your steps and double-check your configuration files; even the smallest typo could prevent the web page from serving.
+Если вы не видите эту веб-страницу, возможно, вы пропустили некоторые шаги в процессе настройки. Проследите за своими действиями и перепроверьте конфигурационные файлы; даже самая маленькая опечатка может помешать отображению веб-страницы.
 
-6. ​		Let's 	continue by clicking **Next 	step** 	on this page, which will serve you with the next page:
+6. Продолжим, нажав **Следующий шаг** на этой странице, что приведет к открытию следующей страницы:
 
 ![img](pics/pic1-3.jpeg)
 
-Рисунок 1.3 – The Zabbix installation pre-requisites page
+Рисунок 1.3 - Страница предварительных условий установки Zabbix
 
-7. ​	Every single option here should be showing **OK** now; if not, fix the mistake it's showing you. If everything is **OK**, you may proceed by clicking **Next step** again, which will take you to the next page:
+7. Каждая опция здесь должна показывать **OK**; если это не так - исправьте ошибку, которую она вам показывает. Если все **OK** - вы можете продолжить, снова нажав **Следующий шаг**, что приведет вас на следующую страницу:
 
 ![img](pics/pic1-4.jpeg)
 
-Рисунок 1.4 – The Zabbix installation DB connection page
+Рисунок 1.4 - Страница подключения к БД установки Zabbix
 
-8. ​	Here, we need to tell our Zabbix frontend where our MySQL database is located. Since we installed it on **localhost**, we just need to make sure we issue the right database name, database user username, and database user password.
+8. Здесь нам нужно указать фронтенду Zabbix где находится наша база данных MySQL. Поскольку мы установили ее на **localhost** - нам просто нужно убедиться, что мы указали правильное имя базы данных, имя пользователя базы данных и пароль пользователя базы данных.
 
-9. ​	This should make the Zabbix frontend able to communicate with the database. Let's proceed by clicking **Next step** again:
+9. Это должно обеспечить связь фронтенда Zabbix с базой данных. Давайте продолжим, снова нажав **Следующий шаг**:
 
 ![img](pics/pic1-5.jpeg)
 
-​Рисунок 1.5 – The Zabbix installation server details page
+Рисунок 1.5 - Страница подробной информации об установочном сервере Zabbix
 
-Next up is the Zabbix server configuration. Make sure to name your server something useful or something cool. For example, I've set up a production server called Meeseeks because every time we got an alert, we could make Zabbix say *"I'm Mr. Meeseeks look at me."* But something like zabbix.example.com also works.
+Следующим шагом будет настройка сервера Zabbix. Обязательно назовите ваш сервер как-нибудь понятно или как-нибудь круто. Например, я настроил рабочий сервер под названием `Meeseeks`, потому что каждый раз, когда мы получали оповещение, мы могли заставить Zabbix сказать _"Я мистер Meeseeks, посмотрите на меня."_ Но что-то вроде `zabbix.example.com` тоже подойдет.
 
-10. ​		Let's 	name our server, set up the time zone to match our own time zone 	and proceed to the next step:
+10. Давайте назовем наш сервер, установим часовой пояс в соответствии с нашим собственным часовым поясом и перейдем к следующему шагу:
 
 ![img](pics/pic1-6.jpeg)
 
-Рисунок 1.6 – The Zabbix installation summary page
+Рисунок 1.6 - Краткая страница установки Zabbix
 
-11. Verify your settings and proceed to click **Next step** one more time.
+11. Проверьте настройки и еще раз нажмите **Следующий шаг**.
 
 ![img](pics/pic1-7.jpeg)
 
-Рисунок 1.7 – The Zabbix installation finish page
+Рисунок 1.7 - Страница завершения установки Zabbix
 
-12. ​	You have successfully installed the Zabbix frontend. You may now click the **Finish** button and we can start using the frontend. You'll be served with a login page where you can use the following default credentials:
+12. Вы успешно установили фронтенд Zabbix. Теперь вы можете нажать кнопку **Finish** и мы можем начать использовать фронтенд. Перед вами откроется страница входа в систему, где вы можете использовать следующие учетные данные по умолчанию:
 
 ```
-Username: Admin
-Password: zabbix
+Имя пользователя: Admin
+Пароль: zabbix
 ```
 
-**How it works…**
+### Как это работает...
 
-Now that we've installed our Zabbix frontend, our Zabbix setup is complete and we are ready to start working with it. Our Zabbix frontend will connect to our database to edit the configuration values of our setup, as we can see in the following Рисунок:
+Теперь, когда мы установили наш фронтенд Zabbix, наша установка Zabbix завершена, и мы готовы начать работу с ним. Наш фронтенд Zabbix подключится к нашей базе данных для редактирования значений конфигурации установки, как мы можем видеть в следующем рисунке:
 
 ![img](pics/pic1-8.jpeg)
 
-Рисунок 1.8 – Zabbix setup communications diagram
+Рисунок 1.8 - Диаграмма связи с установкой Zabbix
 
-The Zabbix frontend will also talk to our Zabbix server, but this is just to make sure the Zabbix server is up and running. Now that we know how to set up the Zabbix frontend, we can start using it. Let's check this out after the next recipe.
+Фронтенд Zabbix также будет общаться с нашим сервером Zabbix, но только для того, чтобы убедиться, что сервер Zabbix запущен и работает. Теперь, когда мы знаем, как настроить фронтенд Zabbix, мы можем начать его использовать. Давайте проверим это после следующего рецепта.
 
-**There's more...**
+### Еще кое-что...
 
-Zabbix provides a very convenient setup guide, which contains a lot of detail regarding the installation of Zabbix. I would always recommend keeping this page open during a Zabbix installation, as it contains information like the link to the latest repository. Check it out here:
+Zabbix предоставляет очень удобное руководство по настройке, содержащее много подробностей относительно установки Zabbix. Я всегда рекомендую держать эту страницу открытой во время установки Zabbix, поскольку она содержит такую информацию, как ссылка на последний репозиторий. Посмотрите ее здесь:
 
 https://www.zabbix.com/download
 
-**Enabling Zabbix server high availability**
+## Включение высокой доступности сервера Zabbix
 
-Zabbix 6 is here, with one of the most anticipated features of all time. High availability will bring your Zabbix setup to the next level by making sure that if one of your Zabbix servers is having issues, another one will take over.
+Zabbix 6 уже здесь, с одной из самых ожидаемых функций за все время. Высокая доступность выведет вашу установку Zabbix на новый уровень, гарантируя, что если один из ваших серверов Zabbix испытывает проблемы, другой сервер возьмет на себя его функции.
 
-A great thing about this implementation is that it supports an easy proprietary way to put one to many Zabbix servers in a cluster. A great way of making sure your monitoring stays in the air at all times (or at least as much as possible).
+Замечательной особенностью этой реализации является то, что она поддерживает простой собственный способ объединения от одного до нескольких серверов Zabbix в кластер. Отличный способ убедиться, что ваш мониторинг всегда остается в воздухе (или, по крайней мере, настолько, насколько это возможно).
 
-Now I do have to be honest, we cannot do anything like load balancing yet. But that is included on the Zabbix roadmap using the Zabbix proxies in a later version. Keep an eye out for any updates regarding that here:
+Теперь я должен быть честен, мы пока не можем сделать ничего подобного балансировке нагрузки. Но это включено в дорожную карту Zabbix с использованием прокси-серверов Zabbix в более поздней версии. Следите за обновлениями по этому поводу здесь:
 
 https://www.zabbix.com/roadmap
 
-**Getting ready**
+### Готовность
 
-Before getting started, please note that creating a high availability setup is considered an advanced topic. It might be more difficult than other recipes in this chapter.
+Прежде чем приступить к работе, обратите внимание, что создание установки высокой доступности считается продвинутой темой. Она может оказаться сложнее, чем другие рецепты в этой главе.
 
-For this setup, we will need three new virtual machines, as we are going to create a split Zabbix setup, unlike the setup that we created in the first recipe of this chapter. Let's take a look at how I have named our three new virtual machines and what their IP addresses will be:
+Для этой установки нам понадобятся три новые виртуальные машины, поскольку мы собираемся создать раздельную установку Zabbix, в отличие от установки, которую мы создали в первом рецепте этой главы. Давайте посмотрим, как я назвал наши три новые виртуальные машины и какими будут их IP-адреса:
 
-1. lar-book-ha1 (192.168.0.1)
+* `lar-book-ha1 (192.168.0.1)`
 
-1. lar-book-ha2 (192.168.0.2)
+* `lar-book-ha2 (192.168.0.2)`
 
-1. lar-book-ha-db (192.168.0.10)
+* `lar-book-ha-db (192.168.0.10)`
 
-Two of these servers will run our Zabbix server cluster and a Zabbix frontend. The other server is just for our MySQL database. Please take note that the IP addresses used in the example may be different for you. Use the correct ones for your environment.
+На двух из этих серверов будет работать наш кластер серверов Zabbix и фронтенд Zabbix. Другой сервер предназначен только для нашей базы данных MySQL. Обратите внимание, что IP-адреса, использованные в примере, могут быть другими. Используйте правильные для вашей среды.
 
-We will also need a virtual IP address for our cluster nodes. We will use 192.168.0.5 in the example.
+Нам также понадобится виртуальный IP-адрес для наших узлов кластера. В примере мы будем использовать `192.168.0.5`.
 
-**Tip**
+---
 
-In our setup, we are using only one MySQL Zabbix database. For making sure all parts of Zabbix are set up as highly available, it might be worth looking into setting up MySQL in a master/master setup. This would be a great combination with the Zabbix server's high availability.
+**Совет**.
 
-This cookbook will NOT use SELinux or AppArmor, so make sure to disable those or add the correct policies before using this guide. Additionally, this guide also does not detail how to set up your firewall, so make sure to do this beforehand as well.
+В нашей установке мы используем только одну базу данных MySQL Zabbix. Для обеспечения высокой доступности всех частей Zabbix, возможно, стоит рассмотреть возможность настройки MySQL в режиме master/master. Это будет отличным сочетанием с высокой доступностью сервера Zabbix.
 
-**How to do it…**
+---
 
-For your convenience, we've split this *How to do it…* section into three parts. One is setting up the database, the other is setting up the Zabbix server cluster, and the last is how to set up the Zabbix frontend redundantly. The *How it works…* section will then provide an explanation about the entire setup.
+В этом руководстве НЕ используется SELinux или AppArmor, поэтому перед использованием данного руководства убедитесь, что они отключены или добавлены правильные политики. Кроме того, в этом руководстве не описано, как настроить брандмауэр, поэтому убедитесь, что это также необходимо сделать заранее.
 
-**Setting up the database**
+### Как это сделать...
 
-Let's start with setting up our Zabbix database, ready to be used in a highly available
+Для вашего удобства мы разделили этот раздел _Как это сделать..._ на три части. Первая - это настройка базы данных, вторая - настройка кластера серверов Zabbix, и последняя - как настроить фронтенд Zabbix с резервированием. В разделе _Как это работает..._ будет дано объяснение всей настройки.
 
-Zabbix server setup:
+#### Настройка базы данных
 
-1. ​	Log in to lar-book-ha-db and install the MariaDB repository with the following command on RedHat based systems:
+Давайте начнем с настройки нашей базы данных Zabbix, готовой к использованию в высокодоступной установке сервера Zabbix:
 
-**wget https://downloads.mariadb.com/MariaDB/mariadb_repo_ setup**
-**chmod +x mariadb_repo_setup**
-**./mariadb_repo_setup**
+1. Войдите в `lar-book-ha-db` и установите репозиторий MariaDB с помощью следующей команды для систем на базе RedHat:
 
-2.	Then, let's install the MariaDB server application with the following command.
+```
+wget https://downloads.mariadb.com/MariaDB/mariadb_repo_setup
+chmod +x mariadb_repo_setup
+./mariadb_repo_setup
+```
 
-For RHEL-based systems:
+2.	Затем установим серверное приложение MariaDB с помощью следующей команды.
 
-**dnf install mariadb-server**
-**systemctl enable mariadb**
-**systemctl start mariadb**
+Для систем на базе RHEL:
 
-For Ubuntu systems:
+```
+dnf install mariadb-server
+systemctl enable mariadb
+systemctl start mariadb
+```
 
-**apt install mariadb-server**
-**systemctl enable mariadb**
-**systemctl start mariadb**
+Для систем на базе Ubuntu:
 
-1. ​	After installing MariaDB, make sure to secure your installation with the following command:
+```
+apt install mariadb-server
+systemctl enable mariadb
+systemctl start mariadb
+```
 
-**/usr/bin/mariadb_secure_installation**
+3. После установки MariaDB убедитесь в безопасности установки с помощью следующей команды:
 
-1. ​	Installing Zabbix and Getting Started Using the Frontend
+```
+/usr/bin/mariadb_secure_installation
+```
 
-1. 1. ​		Make 	sure to answer the questions with yes (Y) 	and conРисунок a root password that's secure. It's highly 	recommended to use a password vault for storing it.
+4. Убедитесь, что на все вопросы вы ответили "да" (Y), и введите надежный пароль root. Настоятельно рекомендуется использовать хранилище паролей для его хранения.
 
-1. 1. ​		Now 	let's create our Zabbix database for our Zabbix servers to connect 	to. Log in to MariaDB with the following command:
+5. Теперь давайте создадим базу данных Zabbix для подключения к ней наших серверов Zabbix. Войдите в MariaDB с помощью следующей команды:
 
-**mysql -u root -p**
+```
+mysql -u root -p
+```
 
-1. ​	Enter the password you set up during the secure installation and create the Zabbix database with the following commands. Do not forget to change the password in the second, third, and fourth commands:
+6. Введите пароль, который вы установили во время безопасной установки, и создайте базу данных Zabbix с помощью следующих команд. Не забудьте изменить `password` во второй, третьей и четвертой командах:
 
-**create database zabbix character set utf8mb4 collate utf8mb4_bin;**
-**create user zabbix@'192.168.0.1' identified by 'password';**
-**create user zabbix@'192.168.0.2' identified by 'password';**
-**create user zabbix@'192.168.0.5' identified by 'password';**
-**grant all privileges on zabbix.\* to 'zabbix'@'192.168.0.1' identified by 'password';**
-**grant all privileges on zabbix.\* to 'zabbix'@'192.168.0.2' identified by 'password';**
-**grant all privileges on zabbix.\* to 'zabbix'@'192.168.0.5' identified by 'password';**
-**flush privileges;**
-**quit**
+```
+create database zabbix character set utf8mb4 collate utf8mb4_bin;
+create user zabbix@'192.168.0.1' identified by 'password';
+create user zabbix@'192.168.0.2' identified by 'password';
+create user zabbix@'192.168.0.5' identified by 'password';
+grant all privileges on zabbix.* to 'zabbix'@'192.168.0.1' identified by 'password';
+grant all privileges on zabbix.* to 'zabbix'@'192.168.0.2' identified by 'password';
+grant all privileges on zabbix.* to 'zabbix'@'192.168.0.5' identified by 'password';
+flush privileges;
+quit
+```
 
-1. ​	Lastly, we need to import the initial Zabbix database configuration, but for that, we need to install the Zabbix repository.
+7. Наконец, нам нужно импортировать начальную конфигурацию базы данных Zabbix, но для этого нам нужно установить репозиторий Zabbix.
 
-For RHEL-based systems:
+Для систем на базе RHEL:
 
-**rpm -Uvh https://repo.zabbix.com/zabbix/6.0/rhel/8/ x86_64/zabbix-release-6.0-1.el8.noarch.rpm**
-**dnf clean all**
+```
+rpm -Uvh https://repo.zabbix.com/zabbix/6.0/rhel/8/x86_64/zabbix-release-6.0-1.el8.noarch.rpm
+dnf clean all
+```
 
-For Ubuntu systems:
+Для систем Ubuntu:
 
-**wget https://repo.zabbix.com/zabbix/6.0/ubuntu/pool/ main/z/zabbix-release/zabbix-release_6.0-1+ubuntu20.04_ all.deb**
-**dpkg -i zabbix-release_6.0-1+ubuntu20.04_all.deb apt update**
+```
+wget https://repo.zabbix.com/zabbix/6.0/ubuntu/pool/main/z/zabbix-release/zabbix-release_6.0-1+ubuntu20.04_all.deb
+dpkg -i zabbix-release_6.0-1+ubuntu20.04_all.deb
+apt update
+```
 
-1. ​	Then, we need to install the SQL scripts Zabbix module. For RHEL-based systems:
+8. Затем необходимо установить модуль SQL-скриптов Zabbix. Для систем на базе RHEL:
 
-**dnf install zabbix-sql-scripts**
+```
+dnf install zabbix-sql-scripts
+```
 
-For Ubuntu systems:
+Для систем на базе Ubuntu:
 
-**apt install zabbix-sql-scripts**
+```
+apt install zabbix-sql-scripts
+```
 
-1. ​	Then, we issue the following command, which might take a while so be patient until it is done:
+9. Затем выполните следующую команду, которая может занять некоторое время, поэтому будьте терпеливы, пока она не будет выполнена:
 
-**zcat /usr/share/doc/zabbix-sql-scripts/mysql/server.sql. gz | mysql -uroot -p zabbix**
-**Setting up the Zabbix server cluster nodes**
+```
+zcat /usr/share/doc/zabbix-sql-scripts/mysql/server.sql.
+gz | mysql -uroot -p zabbix
+```
 
-Setting up the cluster nodes works in the same way as setting up any new Zabbix server.
+#### Настройка узлов кластера сервера Zabbix
 
-The only difference is that we will need to specify some new configuration parameters.
+Настройка узлов кластера происходит так же, как и настройка любого нового сервера Zabbix.
 
-1. ​	Let's start by adding the Zabbix 6.0 repository to our systems lar-book-ha1 and lar-book-ha2:
+Единственное отличие заключается в том, что нам нужно будет указать некоторые новые параметры конфигурации.
 
-**rpm -Uvh https://repo.zabbix.com/zabbix/6.0/rhel/8/ x86_64/zabbix-release-6.0-1.el8.noarch.rpm**
-**dnf clean all**
+1. Начнем с добавления репозитория Zabbix 6.0 в наши системы `lar-book-ha1` и `lar-book-ha2`:
 
-For Ubuntu systems, use the following command:
+```
+rpm -Uvh https://repo.zabbix.com/zabbix/6.0/rhel/8/x86_64/zabbix-release-6.0-1.el8.noarch.rpm
+dnf clean all
+```
 
-**wget https://repo.zabbix.com/zabbix/6.0/ubuntu/pool/ main/z/zabbix-release/zabbix-release_6.0-1+ubuntu20.04_ all.deb**
-**dpkg -i zabbix-release_6.0-1+ubuntu20.04_all.deb apt update**
+Для систем Ubuntu используйте следующую команду:
 
-1. ​	Now let's install the Zabbix server application with the following command. For RHEL-based systems:
+```
+wget https://repo.zabbix.com/zabbix/6.0/ubuntu/pool/main/z/zabbix-release/zabbix-release_6.0-1+ubuntu20.04_all.deb
+dpkg -i zabbix-release_6.0-1+ubuntu20.04_all.deb
+apt update
+```
 
-**dnf install zabbix-server-mysql**
+2. Теперь установим серверное приложение Zabbix с помощью следующей команды. Для систем на базе RHEL:
 
-For Ubuntu systems:
+```
+dnf install zabbix-server-mysql
+```
 
-**apt install zabbix-server-mysql**
+Для систем на базе Ubuntu:
 
-1. ​	Installing Zabbix and Getting Started Using the Frontend
+```
+apt install zabbix-server-mysql
+```
 
-1. 1. ​		We 	will now edit the Zabbix server configuration files, starting with 	lar-book-ha1. 	Issue the following command:
+3. Теперь мы отредактируем файлы конфигурации сервера Zabbix, начиная с `lar-book-ha1`. Выполните следующую команду:
 
-**vim /etc/zabbix/zabbix_server.conf**
+```
+vim /etc/zabbix/zabbix_server.conf
+```
 
-4.	Then, add the following lines to allow a database connection:
+4.	Затем добавьте следующие строки, чтобы разрешить подключение к базе данных:
 
-**DBHost=192.168.0.10**
-**DBPassword=password**
+```
+DBHost=192.168.0.10
+DBPassword=password
+```
 
-1. To enable high availability on this host, add the following lines in the same file:
+5. Чтобы включить высокую доступность на этом хосте, добавьте следующие строки в тот же файл:
 
-**HANodeName=lar-book-ha1**
+```
+HANodeName=lar-book-ha1
+```
 
-1. ​	To make sure our Zabbix frontend knows where to connect to if there is a node fail over, fill in the following:
+6. To make sure our Zabbix frontend knows where to connect to if there is a node fail over, fill in the following:
 
-**NodeAddress=192.168.0.1**
+```
+NodeAddress=192.168.0.1
+```
 
-1. ​	Save the file and let's do the same for our lar-book-ha2 host by editing its file: **vim /etc/zabbix/zabbix_server.conf**
+7. Save the file and let's do the same for our lar-book-ha2 host by editing its file:
 
-1. Then, add the following lines to allow a database connection:
+```
+vim /etc/zabbix/zabbix_server.conf
+```
 
-**DBHost=192.168.0.10**
-**DBPassword=password**
+8. Then, add the following lines to allow a database connection:
 
-1. To enable high availability on this host, add the following lines in the same file:
+```
+DBHost=192.168.0.10
+DBPassword=password
+```
 
-**HANodeName=lar-book-ha2**
+9. To enable high availability on this host, add the following lines in the same file:
 
-1. ​	To make sure our Zabbix frontend knows where to connect to if there is a node fail over, fill in the following:
+```
+HANodeName=lar-book-ha2
+```
 
-**NodeAddress=192.168.0.2**
+10. ​	To make sure our Zabbix frontend knows where to connect to if there is a node fail over, fill in the following:
 
-\11. Save the file and let's start our Zabbix server:
+```
+NodeAddress=192.168.0.2
+```
 
-**systemctl enable zabbix-server**
-**systemctl start zabbix-server**
-**Setting up Apache with high availability**
+11. Save the file and let's start our Zabbix server:
+
+```
+systemctl enable zabbix-server
+systemctl start zabbix-server
+```
+
+#### Setting up Apache with high availability
 
 To make sure our frontend is also set up in such a way that if one Zabbix server has issues it fails over, we will set them up with keepalived. Let's see how we can do this.
 
@@ -504,198 +557,89 @@ For Ubuntu systems:
 
 **apt install keepalived**
 
-1. ​	Then, on lar-book-ha1, edit the keepalived configuration with the following command:
+2. ​	Then, on lar-book-ha1, edit the keepalived configuration with the following command:
 
 **vim /etc/keepalived/keepalived.conf**
 
 3.	Delete everything from this file and add the following text to the file:
 
-vrrp_track_process chk_apache_httpd { process httpd
-
-weight 10
-
+```
+vrrp_track_process chk_apache_httpd {
+      process httpd
+      weight 10
 }
-
 vrrp_instance ZBX_1 {
-state MASTER
-interface ens192
-virtual_router_id 51
-priority 244
-advert_int 1
-
-authentication {
-auth_type PASS
-auth_pass password
+        state MASTER
+        interface ens192
+        virtual_router_id 51
+        priority 244
+        advert_int 1
+        authentication {
+                auth_type PASS
+                auth_pass password
+        }
+        track_process {
+                chk_apache_httpd
+        }
+        virtual_ipaddress {
+                192.168.0.5/24
+        }
 }
+```
 
-track_process {
-chk_apache_httpd
-}
+4. Do not forget to update password to something secure and edit the interface ens192 to your own interface name/number. For Ubuntu, change httpd to apache2.
 
-virtual_ipaddress {
-192.168.0.5/24
-}
-
-}
-
-1. ​	Do not forget to update password to something secure and edit the interface ens192 to your own interface name/number. For Ubuntu, change httpd to apache2.
+---
 
 **Important Note**
 In the previous file, we specified virtual_router_id 51. make sure the virtual router ID 51 isn't used anywhere in the network yet. If it is, simply change the virtual router ID throughout this recipe.
+---
 
+5. On lar-book-ha2, edit the same file with the following command: **vim /etc/keepalived/keepalived.conf**
 
+6. Delete everything from the file with dG and this time we will add the following information:
 
-1. ​	On lar-book-ha2, edit the same file with the following command: **vim /etc/keepalived/keepalived.conf**
-
-
-
-1. ​	Delete everything from the file with dG and this time we will add the following information:
-
-
-
-
-
-vrrp_track_process chk_apache_httpd { process httpd
-
-
-
-weight 10
-
-
-
-
-
+```
+vrrp_track_process chk_apache_httpd {
+      process httpd
+      weight 10
 }
-
-
-
-
-
 vrrp_instance ZBX_1 {
-
-
-
-
-
-state BACKUP
-
-
-
-
-
-interface ens192
-
-
-
-
-
-virtual_router_id 51
-
-
-
-
-
-priority 243
-
-
-
-
-
-advert_int 1
-
-
-
-
-
-authentication {
-
-
-
-
-
-auth_type PASS
-
-
-
-
-
-auth_pass password
-
-
-
-
-
+        state BACKUP
+        interface ens192
+        virtual_router_id 51
+        priority 243
+        advert_int 1
+        authentication {
+                auth_type PASS
+                auth_pass password
+        }
+        track_process {
+                chk_apache_httpd
+        }
+        virtual_ipaddress {
+                192.168.0.5/24
+        }
 }
+```
 
+7. Once again, do not forget to update password to something secure and edit the interface ens192 to your own interface name/number. For Ubuntu, change httpd to apache2.
 
+8. ​	Now let's install the Zabbix frontend with the following command. For RHEL-based systems:
 
-
-
-track_process {
-
-
-
-
-
-chk_apache_httpd
-
-
-
-
-
-}
-
-
-
-
-
-virtual_ipaddress {
-
-Enabling Zabbix server high availability	19
-
-
-
-
-
-192.168.0.5/24
-
-
-
-
-
-}
-
-
-
-
-
-}
-
-
-
-1. ​	Once again, do not forget to update password to something secure and edit the interface ens192 to your own interface name/number. For Ubuntu, change httpd to apache2.
-
-
-
-1. ​	Now let's install the Zabbix frontend with the following command. For RHEL-based systems:
-
-**dnf install httpd zabbix-web-mysql zabbix-apache-conf**
-
-
-
-
+```
+dnf install httpd zabbix-web-mysql zabbix-apache-conf
+```
 
 For Ubuntu systems:
 
+```
+apt install apache2 zabbix-frontend-php zabbix-apache-conf
+```
 
 
 
-
-**apt install apache2 zabbix-frontend-php zabbix-apache-conf**
-
-
-
-1. ​	Start the web server and keepalived to make your Zabbix frontend available with the following command:
+9. ​	Start the web server and keepalived to make your Zabbix frontend available with the following command:
 
 
 
