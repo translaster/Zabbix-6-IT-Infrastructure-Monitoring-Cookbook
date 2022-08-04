@@ -506,38 +506,38 @@ DBPassword=password
 HANodeName=lar-book-ha1
 ```
 
-6. To make sure our Zabbix frontend knows where to connect to if there is a node fail over, fill in the following:
+6. Чтобы убедиться, что наш фронтенд Zabbix знает, куда подключаться в случае отказа узла, заполните следующее:
 
 ```
 NodeAddress=192.168.0.1
 ```
 
-7. Save the file and let's do the same for our lar-book-ha2 host by editing its file:
+7. Сохраните файл и давайте сделаем то же самое для нашего узла `lar-book-ha2`, отредактировав его файл:
 
 ```
 vim /etc/zabbix/zabbix_server.conf
 ```
 
-8. Then, add the following lines to allow a database connection:
+8. Затем добавьте следующие строки, чтобы разрешить подключение к базе данных:
 
 ```
 DBHost=192.168.0.10
 DBPassword=password
 ```
 
-9. To enable high availability on this host, add the following lines in the same file:
+9. Чтобы включить высокую доступность на этом хосте, добавьте следующие строки в тот же файл:
 
 ```
 HANodeName=lar-book-ha2
 ```
 
-10. ​	To make sure our Zabbix frontend knows where to connect to if there is a node fail over, fill in the following:
+10. Чтобы убедиться, что наш фронтенд Zabbix знает, куда подключаться в случае отказа узла, заполните следующее:
 
 ```
 NodeAddress=192.168.0.2
 ```
 
-11. Save the file and let's start our Zabbix server:
+11. Сохраните файл и запустите наш сервер Zabbix:
 
 ```
 systemctl enable zabbix-server
@@ -546,23 +546,29 @@ systemctl start zabbix-server
 
 #### Setting up Apache with high availability
 
-To make sure our frontend is also set up in such a way that if one Zabbix server has issues it fails over, we will set them up with keepalived. Let's see how we can do this.
+Чтобы убедиться, что наш фронтенд также настроен таким образом, что если у одного сервера Zabbix возникнут проблемы, он перейдет на другой, мы настроим их с помощью keepalived. Давайте посмотрим, как это можно сделать.
 
-1. ​	Let's start by logging in to both lar-book-ha1 and lar-book-ha2 and installing keepalived.
+1. Начнем с входа в системы `lar-book-ha1` и `lar-book-ha2` и установки keepalived.
 
-For RHEL-based systems:
+Для систем на базе RHEL:
 
-**dnf install -y keepalived**
+```
+dnf install -y keepalived
+```
 
-For Ubuntu systems:
+Для систем Ubuntu:
 
-**apt install keepalived**
+```
+apt install keepalived
+```
 
-2. ​	Then, on lar-book-ha1, edit the keepalived configuration with the following command:
+2. Затем на `lar-book-ha1` отредактируйте конфигурацию keepalived с помощью следующей команды:
 
-**vim /etc/keepalived/keepalived.conf**
+```
+vim /etc/keepalived/keepalived.conf
+```
 
-3.	Delete everything from this file and add the following text to the file:
+3.	Удалите все из этого файла и добавьте в него следующий текст:
 
 ```
 vrrp_track_process chk_apache_httpd {
@@ -588,17 +594,24 @@ vrrp_instance ZBX_1 {
 }
 ```
 
-4. Do not forget to update password to something secure and edit the interface ens192 to your own interface name/number. For Ubuntu, change httpd to apache2.
+4. Не забудьте заменить `password` на какой-нибудь надежный и изменить интерфейс `ens192` на ваше собственное имя/номер интерфейса. Для Ubuntu измените `httpd` на `apache2`.
 
----
+<table border="1" width="100%" cellpadding="5">
+  <tr>
+    <td>
+    <p><b>Важное замечание/b></p>
+<p>В предыдущем файле мы указали <code>virtual_router_id 51</code>. Убедитесь, что идентификатор виртуального маршрутизатора 51 еще нигде не используется в сети. Если он используется, просто измените ID виртуального маршрутизатора в этом рецепте.</p>
+</td>
+</tr>
+</table>
 
-**Important Note**
-In the previous file, we specified virtual_router_id 51. make sure the virtual router ID 51 isn't used anywhere in the network yet. If it is, simply change the virtual router ID throughout this recipe.
----
+5. На `lar-book-ha2` отредактируйте тот же файл с помощью следующей команды:
 
-5. On lar-book-ha2, edit the same file with the following command: **vim /etc/keepalived/keepalived.conf**
+```
+vim /etc/keepalived/keepalived.conf
+```
 
-6. Delete everything from the file with dG and this time we will add the following information:
+6. Удалите все из файла с помощью `dG`, и на этот раз мы добавим следующую информацию:
 
 ```
 vrrp_track_process chk_apache_httpd {
@@ -624,32 +637,32 @@ vrrp_instance ZBX_1 {
 }
 ```
 
-7. Once again, do not forget to update password to something secure and edit the interface ens192 to your own interface name/number. For Ubuntu, change httpd to apache2.
+7. Еще раз, не забудьте обновить `password` на какой-нибудь надежный и изменить интерфейс `ens192` на ваше собственное имя/номер интерфейса. Для Ubuntu измените `httpd` на `apache2`.
 
-8. ​	Now let's install the Zabbix frontend with the following command. For RHEL-based systems:
+8. Теперь установим фронтенд Zabbix с помощью следующей команды. Для систем на базе RHEL:
 
 ```
 dnf install httpd zabbix-web-mysql zabbix-apache-conf
 ```
 
-For Ubuntu systems:
+Для систем на базе Ubuntu:
 
 ```
 apt install apache2 zabbix-frontend-php zabbix-apache-conf
 ```
 
-9. ​	Start the web server and keepalived to make your Zabbix frontend available with the following command:
+9. Запустите веб-сервер и keepalived, чтобы сделать ваш фронтенд Zabbix доступным, с помощью следующей команды:
 
 ```
 systemctl enable httpd keepalived
 systemctl start httpd keepalived
 ```
 
-10. ​	Then, we are ready to conРисунок our Zabbix frontend. Navigate to your virtual IP address (in the example IP case, http://192.168.0.5/zabbix) and you will see the following page:
+10. Затем, мы готовы к подключению нашего фронтенда Zabbix. Перейдите на ваш виртуальный IP-адрес (в примере IP-адрес http://192.168.0.5/zabbix), и вы увидите следующую страницу:
 
 ![img](pics/pic1-9.jpeg)
 
-Рисунок 1.9 – The Zabbix initial configuration window
+Рисунок 1.9 - Окно начальной конфигурации Zabbix
 
 11. Click on **Next step** twice until you see the following page:
 
@@ -657,17 +670,17 @@ systemctl start httpd keepalived
 
 Рисунок 1.10 – The Zabbix database configuration window for lar-book-ha1
 
-1. ​		Make 	sure to fill in **Database 	host** 	with the IP address of our Zabbix MariaDB database (192.168.0.10). 	Then, fill in the database password for our **zabbix** 	database user.
+12. Make 	sure to fill in **Database 	host** 	with the IP address of our Zabbix MariaDB database (192.168.0.10). 	Then, fill in the database password for our **zabbix** 	database user.
 
-1. ​		Then, 	for the last step, for our first node, set up the **Zabbix 	server name** 	as lar-book-ha1 	and select your time zone as seen in the following screenshot.
+13. Then, for the last step, for our first node, set up the **Zabbix 	server name** 	as lar-book-ha1 	and select your time zone as seen in the following screenshot.
 
 ![img](pics/pic1-11.jpeg)
 
 Рисунок 1.11 – The Zabbix server settings window for lar-book-ha1
 
-1. Then click **Next step** and **Finish**.
+14. Then click **Next step** and **Finish**.
 
-1. ​	Now we need to do the same thing to our second frontend. Log in to lar-book-ha1 and issue the following.
+15. Now we need to do the same thing to our second frontend. Log in to lar-book-ha1 and issue the following.
 
 On RHEL-based systems:
 
@@ -681,24 +694,22 @@ For Ubuntu systems:
 systemctl stop apache2
 ```
 
-1. ​	When navigating to your virtual IP (in the example IP case, http://192.168.0.5/zabbix), you will see the same configuration wizard again.
+16. When navigating to your virtual IP (in the example IP case, http://192.168.0.5/zabbix), you will see the same configuration wizard again.
 
-1. Fill out the database details again:
+17. Fill out the database details again:
 
 ![img](pics/pic1-12.jpeg)
 
 Рисунок 1.12 – The Zabbix database configuration window for lar-book-ha2
 
-1. ​	Installing Zabbix and Getting Started Using the Frontend
-
-1. 1. ​		Then 	make sure to set up the **Zabbix 	server name** 	as 	lar-book-ha2 	as seen in the screenshot.
+18. Then make sure to set up the **Zabbix 	server name** 	as 	lar-book-ha2 	as seen in the screenshot.
 
 ![img](pics/pic1-13.jpeg)
 
 Рисунок 1.13 – The Zabbix server settings window for lar-book-ha2
 
 
-1. ​	Now we need to reenable the lar-book-ha1 frontend by issuing the following. On RHEL-based systems:
+19. Now we need to reenable the lar-book-ha1 frontend by issuing the following. On RHEL-based systems:
 
 ```
 systemctl start httpd
@@ -712,11 +723,9 @@ systemctl start apache2
 
 That should be our last step. Everything should now be working as expected. Make sure to check your Zabbix server log file to see if the HA nodes are running as expected.
 
-**How it works...**
+### How it works...
 
 Now that we have done it, how does the Zabbix server actually work in a high availability mode? Let's start by checking out the **Reports** | **System information** page in our Zabbix frontend.
-
-Enabling Zabbix server high availability	23
 
 ![img](pics/pic1-14.jpeg)
 
@@ -736,9 +745,11 @@ We also included the NodeAddress parameter in the configuration file. This param
 
 To take things a bit further, I have added a simple keepalived setup to this installation as well. Keepalived is a way to build simple VRRP fail over setups between Linux servers. In our case, we have entered the VIP as 192.168.0.5 and added the chk_apache_ httpd process monitoring to determine when to fail over. Our fail over works as follows:
 
+```
 lar-book-ha1 has priority 244
 
 lar-book-ha2 has priority 243
+```
 
 If HTTPd or Apache 2 is running on our node, that adds a weight of 10 to our priority, leading to the total priority of 254 and 253, respectively. Now let's imagine that lar-book-ha1 no longer has the web server process running. That means its priority drops to 244, which is lower than 253 on lar-book-ha2, which does have the web server process running.
 
@@ -746,17 +757,17 @@ Whichever host has the highest priority is the host that will have the VIP 192.1
 
 Combining these two ways of setting up high availability, we have just created redundancy for two of the parts that make up our Zabbix setup, making sure we can keep outages to a minimum.
 
-**There's more...**
+### There's more...
 
 Now you may wonder, what if I wanted to go further in terms of setting up high availability. First, the Zabbix high availability feature is built to be simple and understandable to the entire Zabbix user base. Meaning that as of now, you might not see the same amount of features you would get with a third-party implementation.
 
 Nevertheless, the new Zabbix server high availability feature has proved itself to be a long-awaited feature that really adds something to the table. If you want to run a high availability setup like this, the best way to add one more level of complexity to high availability is a MySQL master/master setup. Setting up the Zabbix database with high availability, which is the main source of truth, will make sure that your Zabbix setup really is reliable in as many ways as possible. For more information regarding MariaDB replication, check out the documentation here: [https://mariadb.com/kb/en/](https://mariadb.com/kb/en/standard-replication/) [standard-replication/](https://mariadb.com/kb/en/standard-replication/).
 
-**Using the Zabbix frontend**
+## Using the Zabbix frontend
 
 If this is your first time using Zabbix, congratulations on getting to the UI. If you are a returning Zabbix user, there have been some changes to the Zabbix 6 UI that you might notice. We'll be going over some of the different elements that we can find in the Zabbix frontend so that during this book, you'll feel confident in finding everything you need.
 
-**Getting ready**
+### Getting ready
 
 To get started with the Zabbix UI, all we need to do is log in to the frontend. You will be served with the following page at the IP on which your server is running the Zabbix frontend:
 
@@ -765,17 +776,15 @@ To get started with the Zabbix UI, all we need to do is log in to the frontend. 
 
 Make sure you log in to the Zabbix frontend with the default credentials:
 
-1. **Username**: Admin
+* **Username**: `Admin`
 
-1. **Password**: zabbix
-
-26	Installing Zabbix and Getting Started Using the Frontend
+* **Password**: `zabbix`
 
 **Tip**
 
 Just like in Linux, Zabbix is case-sensitive in most places. When entering your username, make sure to include the right cases; otherwise, you won't be able to log in!
 
-**How to do it…**
+### How to do it…
 
 After you log in, you'll be served with the default page, which is the default dashboard. This is what Zabbix has called **Global view**and it provides us with a nice overview of what's going on. We can completely customize this and all the other dashboards that Zabbix supplies, but it's a good idea to familiarize yourself with the default setup before building something new:
 
@@ -795,25 +804,25 @@ From left to right, let's start with the **System information** widget:
 
 This is the **System information** widget, which as you might have guessed details all the system information for you. This way, we can keep an eye on what's going on with our Zabbix server and see whether our Zabbix is even running. Let's go over the parameters:
 
-1. ​	**Zabbix server is running**: Informs us whether the Zabbix server backend is actually running and where it is running. In this case, it's running, and it's running on localhost:10051.
+* **Zabbix server is running**: Informs us whether the Zabbix server backend is actually running and where it is running. In this case, it's running, and it's running on localhost:10051.
 
-1. ​	**Number of hosts**: This will detail the number of hosts **enabled**(11), the number of hosts **disabled** (0), and the number of **templates** we have (235). It gives us a quick overview of our Zabbix server host information.
+* **Number of hosts**: This will detail the number of hosts **enabled**(11), the number of hosts **disabled** (0), and the number of **templates** we have (235). It gives us a quick overview of our Zabbix server host information.
 
-1. ​	**Number of items**: Here, we can see details of our Zabbix server's items—in this case, **enabled** (287), **disabled** (0), and **not supported** (35).
+*​	**Number of items**: Here, we can see details of our Zabbix server's items—in this case, **enabled** (287), **disabled** (0), and **not supported** (35).
 
-1. ​	**Number of triggers**: This details the number of triggers. We can see how many are **enabled** (120) and **disabled** (0), but also how many are in a **problem** state (8) and how many are in an **ok** state (112).
+* **Number of triggers**: This details the number of triggers. We can see how many are **enabled** (120) and **disabled** (0), but also how many are in a **problem** state (8) and how many are in an **ok** state (112).
 
-1. ​	**Number of users (online)**: The first value details the total number of users. The second value details the numbers of users currently logged in to the Zabbix frontend.
+* **Number of users (online)**: The first value details the total number of users. The second value details the numbers of users currently logged in to the Zabbix frontend.
 
-1. 1. ​		**Required 	server performance, new values per second**: 	Perhaps I'm introducing you to a completely new concept here, which 	is **New 	Values Per Second**, 	or **NVPS**. 	A server receives or requests values through items and writes these 	to our MariaDB database (or another database). The NVPS information 	detailed here shows the estimated number of NVPS received by the 	Zabbix server. Keep a close eye on this as your Zabbix server 	grows, as it's a good indicator to see how quickly you should scale 	up.
+* **Required 	server performance, new values per second**: 	Perhaps I'm introducing you to a completely new concept here, which 	is **New 	Values Per Second**, 	or **NVPS**. 	A server receives or requests values through items and writes these 	to our MariaDB database (or another database). The NVPS information 	detailed here shows the estimated number of NVPS received by the 	Zabbix server. Keep a close eye on this as your Zabbix server 	grows, as it's a good indicator to see how quickly you should scale 	up.
 
-1. 1. ​		**High 	availability cluster**: 	If you are running a Zabbix server high availability cluster, you 	will see if it is enabled here and what the fail over delay is. 	Additionally, the **System 	information** 	page will display additional high availability information.
+* **High 	availability cluster**: 	If you are running a Zabbix server high availability cluster, you 	will see if it is enabled here and what the fail over delay is. 	Additionally, the **System 	information** 	page will display additional high availability information.
 
 You might also see three additional values here depending on your setup:
 
-1. ​	**Database history tables upgraded**: If you see this, it's indicating that one of your database history tables hasn't been upgraded yet. Numeric (float) tables have been expanded to allow for more characters to be saved per data point. This table isn't upgraded automatically coming from Zabbix 4 to 5 or higher, as not everyone needs it and it might take a long time to upgrade.
+* **Database history tables upgraded**: If you see this, it's indicating that one of your database history tables hasn't been upgraded yet. Numeric (float) tables have been expanded to allow for more characters to be saved per data point. This table isn't upgraded automatically coming from Zabbix 4 to 5 or higher, as not everyone needs it and it might take a long time to upgrade.
 
-1. ​	**Database name**: If you see the name of your database with the value of your version it might indicate you are running a non-supported database version. You could see a message like: Warning! Unsupported <DATABASE NAME> database server version. Should be at least <DATABASE VERSION>.
+* **Database name**: If you see the name of your database with the value of your version it might indicate you are running a non-supported database version. You could see a message like: Warning! Unsupported <DATABASE NAME> database server version. Should be at least <DATABASE VERSION>.
 
 Now, that's one of the most important widgets when it comes to your Zabbix server and it's a great one to keep on your main dashboard if you ask me.
 
@@ -827,17 +836,17 @@ The **Host availability** widget is a quick overview widget showing you everythi
 
 On top of that, it also shows you how many hosts currently have a trigger in a certain state. There are several default severities in Zabbix:
 
-1. **Disaster**
+* **Disaster**
 
-1. **High**
+* **High**
 
-1. **Average**
+* **Average**
 
-1. **Warning**
+* **Warning**
 
-1. **Information**
+* **Information**
 
-1. **Not classified**
+* **Not classified**
 
 We can fully customize the severity levels and colors; for example, what severity levels we want to put on which triggers. So, if you are worried about the severities right now, don't be; we'll get to that later.
 
@@ -861,21 +870,21 @@ It's a clock with the local Linux system time. Need I say more? Let's move on to
 
 Now, this is an interesting widget that I use a lot. We see our current problems on this screen, so if we have our triggers set up correctly, we get valuable information here. A quick overview of how many hosts are having problems is one thing, but the **Problems** page also gives us more details about the problem:
 
-1. **Time**: At what time this problem was first noticed by the Zabbix server
+* **Time**: At what time this problem was first noticed by the Zabbix server
 
-1. ​	**Info**: Information about the event, with Manual close and Suppressed statuses being represented here.
+* **Info**: Information about the event, with Manual close and Suppressed statuses being represented here.
 
-1. **Host**: What host this problem occurred on.
+* **Host**: What host this problem occurred on.
 
-1. ​	**Problem**/**Severity**: What the problem is and how severe it is. The severity is shown in a color, in this case, orange meaning **Average**.
+* **Problem**/**Severity**: What the problem is and how severe it is. The severity is shown in a color, in this case, orange meaning **Average**.
 
-1. **Duration**: How long this has been a problem.
+* **Duration**: How long this has been a problem.
 
-1. ​	**Ack**: Whether this problem has been acknowledged or not by yourself or another Zabbix user.
+* **Ack**: Whether this problem has been acknowledged or not by yourself or another Zabbix user.
 
-1. ​	**Actions**: What actions have been taken after this problem occurred, for example, a custom script that executes on problem creation. If you hover over any action, it will show you detailed information about all actions that have been taken for this problem.
+* **Actions**: What actions have been taken after this problem occurred, for example, a custom script that executes on problem creation. If you hover over any action, it will show you detailed information about all actions that have been taken for this problem.
 
-1. **Tags**: What tags are assigned to this problem.
+* **Tags**: What tags are assigned to this problem.
 
 The **Problems** widget is very useful. We have different types of this widget available and as mentioned before, it is completely customizable, based on how this widget shows our problems to us. Take a quick look at some of the options, which we'll detail further in a later chapter:
 
@@ -895,17 +904,17 @@ Now, there are two more widgets that are completely empty on our default dashboa
 
 Now we know how to work with the Zabbix frontend and we can continue further on with how to navigate our instance.
 
-**Navigating the frontend**
+## Navigating the frontend
 
 Navigating the Zabbix frontend is easier than it looks at first glance, especially with some of the amazing changes made to the UI starting from Zabbix 5.0. Let's explore the Zabbix navigational UI some more in this recipe by looking at the navigation bar and what it has to offer.
 
-**Getting ready**
+### Getting ready
 
 Now that we've seen the first page after logging in with the default dashboard, it is time to start navigating through the Zabbix UI and see some of the other pages available. We'll move through the sidebar and explore the pages available in our Zabbix installation so that when we start monitoring our networks and applications, we know where we can find everything.
 
 So, before continuing, make sure you have the Zabbix server ready as set up in the previous recipes.
 
-**How to do it…**
+### How to do it…
 
 The Zabbix navigation bar is the gateway to all of our powerful tools and configuration settings. Zabbix uses a left-side navigation bar to keep our UI as clean as possible. On top of that, they have made the sidebar disappear so that we can keep a close look at all of our content, without the sidebar blocking our vision.
 
@@ -921,17 +930,17 @@ Let's take a look at the Zabbix sidebar as we see it from our default page and g
 
 We've got some categories here to choose from, and one level below the categories, we've got our different pages. First, let's start by detailing the categories:
 
-1. ​	**Monitoring**: The **Monitoring** category is where we can find all of our information about our collected data. It's basically the category you want to use when you're working with Zabbix to read any collected information you've worked hard to acquire.
+* **Monitoring**: The **Monitoring** category is where we can find all of our information about our collected data. It's basically the category you want to use when you're working with Zabbix to read any collected information you've worked hard to acquire.
 
-1. ​	**Services**: The **Services** category is new to Zabbix 6 and comes as part of the improved Business Service Monitoring features. We can find all of the information regarding service and SLA monitoring here.
+* **Services**: The **Services** category is new to Zabbix 6 and comes as part of the improved Business Service Monitoring features. We can find all of the information regarding service and SLA monitoring here.
 
-1. ​	**Inventory**: The **Inventory** category is a cool extra feature in Zabbix that we can use to look at our host-related inventory information. You can add stuff such as software versions or serial numbers to hosts and look at them here.
+* **Inventory**: The **Inventory** category is a cool extra feature in Zabbix that we can use to look at our host-related inventory information. You can add stuff such as software versions or serial numbers to hosts and look at them here.
 
-1. 1. ​		**Reports**: 	The **Reports** 	category contains a variety of predefined and user-customizable 	reports focused on displaying an overview of parameters such as 	system information, triggers, and gathered data.
+* **Reports**: 	The **Reports** 	category contains a variety of predefined and user-customizable 	reports focused on displaying an overview of parameters such as 	system information, triggers, and gathered data.
 
-1. 1. ​		**Configuration**: 	The **Configuration** 	category is where we build everything we want to see in **Monitoring**, 	**Inventory**, 	and **Reporting**. 	We can edit our settings to suit our every need so that Zabbix can 	show us that data in a useful way.
+* **Configuration**: 	The **Configuration** 	category is where we build everything we want to see in **Monitoring**, 	**Inventory**, 	and **Reporting**. 	We can edit our settings to suit our every need so that Zabbix can 	show us that data in a useful way.
 
-1. 1. ​		**Administration**: 	The **Administration** 	category is where we administer the Zabbix server. You'll find all 	your settings from the server here to enable you and your 	colleagues to have a good working Zabbix experience.
+* **Administration**: 	The **Administration** 	category is where we administer the Zabbix server. You'll find all 	your settings from the server here to enable you and your 	colleagues to have a good working Zabbix experience.
 
 You'll go over all of these quite a lot while using this book, so remember them well. Let's dive a little deeper into the categories by looking at them one by one. Let's start with the **Monitoring** category:
 
@@ -941,17 +950,17 @@ You'll go over all of these quite a lot while using this book, so remember them 
 
 The **Monitoring** tab contains the following pages:
 
-1. ​	**Dashboard**: This is where you will find the default dashboard we showed in *Рисунок 1.24*. It is also where we can add many more dashboards for everything we can think of.
+* **Dashboard**: This is where you will find the default dashboard we showed in *Рисунок 1.24*. It is also where we can add many more dashboards for everything we can think of.
 
-1. ​	**Problems**: We can look at our current problem in detail here. We are provided with a bunch of filter options to narrow down our problem search if needed.
+* **Problems**: We can look at our current problem in detail here. We are provided with a bunch of filter options to narrow down our problem search if needed.
 
-1. ​	**Hosts**: **Hosts** will provide a quick overview of what's going on with hosts. It also provides links to navigate to pages showing the data for our hosts.
+* **Hosts**: **Hosts** will provide a quick overview of what's going on with hosts. It also provides links to navigate to pages showing the data for our hosts.
 
-1. ​	**Latest data**: Here is a page we're going to use quite a lot throughout our professional Zabbix lifetime. The **Latest data** page is where we can find collected values for every single host, which we can of course filter on.
+* **Latest data**: Here is a page we're going to use quite a lot throughout our professional Zabbix lifetime. The **Latest data** page is where we can find collected values for every single host, which we can of course filter on.
 
-1. ​	**Maps**: Maps are a very helpful tool in Zabbix to get an overview of your infrastructure. We can use them for network overviews and such.
+* **Maps**: Maps are a very helpful tool in Zabbix to get an overview of your infrastructure. We can use them for network overviews and such.
 
-1. ​	**Discovery**: This page provides us with an overview of discovered devices. We'll work more on this later.
+* **Discovery**: This page provides us with an overview of discovered devices. We'll work more on this later.
 
 Next, we have the **Services** category:
 
@@ -961,13 +970,13 @@ Next, we have the **Services** category:
 
 This part of the sidebar contains the following pages:
 
-1. **Services**: This is where we conРисунок all of our services that we want to monitor.
+* **Services**: This is where we conРисунок all of our services that we want to monitor.
 
-1. ​	**Service actions**: The section where we can set up any actions for our conРисунокd services. You'll find options like sending our notifications for SLAs and more.
+* **Service actions**: The section where we can set up any actions for our conРисунокd services. You'll find options like sending our notifications for SLAs and more.
 
-1. **SLA**: We can conРисунок any SLAs here that we can then use in our services.
+* **SLA**: We can conРисунок any SLAs here that we can then use in our services.
 
-1. ​	**SLA report**: A detailed overview of conРисунокd services with their SLAs and if they are being met or not.
+* **SLA report**: A detailed overview of conРисунокd services with their SLAs and if they are being met or not.
 
 Then, we have the **Inventory** category:
 
@@ -977,9 +986,9 @@ Then, we have the **Inventory** category:
 
 The **Inventory** tab contains the following pages:
 
-1. **Overview**: A quick overview page for your inventory information.
+* **Overview**: A quick overview page for your inventory information.
 
-1. **Hosts**: A more detailed look into inventory values on a per-host basis.
+* **Hosts**: A more detailed look into inventory values on a per-host basis.
 
 Next, we have the **Reports** category:
 
@@ -989,19 +998,19 @@ Next, we have the **Reports** category:
 
 The **Reports** tab contains the following pages:
 
-1. ​	**System information**: You can look at the system information here; it contains the same information as the **System information** widget.
+* **System information**: You can look at the system information here; it contains the same information as the **System information** widget.
 
-1. ​	**Scheduled reports**: This is where we conРисунок any automatic PDF reporting that we might want to send out.
+* **Scheduled reports**: This is where we conРисунок any automatic PDF reporting that we might want to send out.
 
-1. ​	**Availability report**: On this page, we can see the percentage of time a trigger has been in a **problem** state compared to the **ok** state. This is a helpful way of seeing for how long certain items are actually healthy.
+* **Availability report**: On this page, we can see the percentage of time a trigger has been in a **problem** state compared to the **ok** state. This is a helpful way of seeing for how long certain items are actually healthy.
 
-1. ​	**Triggers top 100**: The top 100 triggers that have changed their state most often within a period of time.
+* **Triggers top 100**: The top 100 triggers that have changed their state most often within a period of time.
 
-1. ​	**Audit**: We can see who changed what on our Zabbix server here. This is a great way to see which colleague locked you out by accident or whether it was on purpose.
+* **Audit**: We can see who changed what on our Zabbix server here. This is a great way to see which colleague locked you out by accident or whether it was on purpose.
 
-1. ​	**Action log**: We can see a list of actions that have been taken, for example, due to triggers going to a **problem** or **ok** state.
+* **Action log**: We can see a list of actions that have been taken, for example, due to triggers going to a **problem** or **ok** state.
 
-1. **Notifications**: On this page, we can see the number of notifications sent to our users.
+* **Notifications**: On this page, we can see the number of notifications sent to our users.
 
 Next, we have the **Configuration** category:
 
@@ -1011,19 +1020,19 @@ Next, we have the **Configuration** category:
 
 The **Configuration** tab contains the following pages:
 
-1. ​	**Host groups**: We conРисунок our host groups here; for instance, a group for all *Linux servers*.
+* **Host groups**: We conРисунок our host groups here; for instance, a group for all *Linux servers*.
 
-1. ​	**Templates**: This is where we conРисунок our templates that we can use to monitor hosts from the Zabbix server.
+* **Templates**: This is where we conРисунок our templates that we can use to monitor hosts from the Zabbix server.
 
-1. ​	**Hosts**: Another hosts tab, but this time it is not for checking the data. This is where we add and conРисунок host settings.
+* **Hosts**: Another hosts tab, but this time it is not for checking the data. This is where we add and conРисунок host settings.
 
-1. ​	**Maintenance**: In Zabbix, we have the availability to set maintenance periods; this way, triggers or notifications won't disturb you while you take something offline for maintenance, for example.
+* **Maintenance**: In Zabbix, we have the availability to set maintenance periods; this way, triggers or notifications won't disturb you while you take something offline for maintenance, for example.
 
-1. ​	**Actions**: Remember how I mentioned we can conРисунок actions for when a trigger changes state? This is where we conРисунок those actions.
+* **Actions**: Remember how I mentioned we can conРисунок actions for when a trigger changes state? This is where we conРисунок those actions.
 
-1. ​	**Event correlation**: We can correlate problems here to reduce noise or prevent event storms. This is achieved by closing new or old problems when they correlate to other problems.
+* **Event correlation**: We can correlate problems here to reduce noise or prevent event storms. This is achieved by closing new or old problems when they correlate to other problems.
 
-1. **Discovery**: This is where we conРисунок Zabbix discovery for automatic host creation.
+* **Discovery**: This is where we conРисунок Zabbix discovery for automatic host creation.
 
 Finally, we have the **Administration** category:
 
@@ -1033,23 +1042,23 @@ Finally, we have the **Administration** category:
 
 The **Administration** tab contains the following pages:
 
-1. ​	**General**: The general page contains our Zabbix server configuration. Settings ranging from housekeeper to frontend theme are found here.
+* **General**: The general page contains our Zabbix server configuration. Settings ranging from housekeeper to frontend theme are found here.
 
-1. ​	**Proxies**: This is where we conРисунок proxies that should be connected to this Zabbix server.
+* **Proxies**: This is where we conРисунок proxies that should be connected to this Zabbix server.
 
-1. ​	**Authentication**: We can find our authentication settings here, such as LDAP, SAML, and HTTP.
+* **Authentication**: We can find our authentication settings here, such as LDAP, SAML, and HTTP.
 
-1. ​	**User groups**: This is where we conРисунок user groups and the permissions for these user groups.
+* **User groups**: This is where we conРисунок user groups and the permissions for these user groups.
 
-1. ​	**User roles**: It's possible to conРисунок different users' roles here, to limit or extend certain frontend functionality to certain users.
+* **User roles**: It's possible to conРисунок different users' roles here, to limit or extend certain frontend functionality to certain users.
 
-1. **Users**: Add users to this page.
+* **Users**: Add users to this page.
 
-1. ​	**Media types**: There are several media types pre-conРисунокd in Zabbix, which you'll find here already. We can also add custom media types.
+* **Media types**: There are several media types pre-conРисунокd in Zabbix, which you'll find here already. We can also add custom media types.
 
-1. ​	**Scripts**: This is where we can add custom scripts, for extending Zabbix functionality in the frontend.
+* **Scripts**: This is where we can add custom scripts, for extending Zabbix functionality in the frontend.
 
-1. ​	**Queue**: View your Zabbix server queue here. Items might be stuck in a queue due to data collection or performance issues.
+* **Queue**: View your Zabbix server queue here. Items might be stuck in a queue due to data collection or performance issues.
 
 **Tip**
 
