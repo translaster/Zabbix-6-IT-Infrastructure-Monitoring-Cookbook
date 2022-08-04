@@ -32,13 +32,9 @@ To get started with this, we'll need a Zabbix server like the one we used in the
 
 Looking at the following figure, we can see how our example company, **Cloud Hoster**, is set up. We will create the users seen in the diagram to create a structured and solid user setup:
 
-![img](file:///tmp/lu106935qboif.tmp/lu106935qbxdm_tmp_c3efa28d82460013.png) 
+![img](pics/pic2-1.png)
 
-
-
-
-
-Figure 2.1 – Cloud Hoster department diagram
+_Figure 2.1 – Cloud Hoster department diagram_
 
 So, **Cloud Hoster** has some departments that need access to the Zabbix frontend and others who don't need it at all. Let's say we want to give the following departments access to the Zabbix frontend:
 
@@ -48,37 +44,31 @@ So, **Cloud Hoster** has some departments that need access to the Zabbix fronten
 
 1. ​	**Buying and Inventory**: To look at inventory information and compare it to other internal tools
 
-
-
 **How to do it…**
 
 Let's get started with creating these three groups in our Zabbix UI:
 
 1. ​	Getting Things Ready with Zabbix User Management
 
-
-
 1. 1. ​		To 	do this, navigate to **Administration** 	| **User 	groups**, 	which will show you the following page:
 
-![img](file:///tmp/lu106935qboif.tmp/lu106935qbxdm_tmp_f059e8842c1b13a8.jpg) 
+![img](pics/pic2-2.png)
 
-
-
-Figure 2.2 – The Zabbix User groups window
+_Figure 2.2 – The Zabbix User groups window_
 
 1. ​	Now, let's start by creating the **Networking** group by clicking **Create user group** in the top-right corner. This will bring you to the following screen:
 
-![img](file:///tmp/lu106935qboif.tmp/lu106935qbxdm_tmp_cacc99f075172087.jpg) 
+![img](pics/pic2-3.png)
 
-Figure 2.3 – The Zabbix User groups configuration window
+_Figure 2.3 – The Zabbix User groups configuration window_
 
 We will need to fill in the information, starting with **Group name**, which of course will be Networking. There are no users for this group yet, so we'll skip that one. **Frontend access** is the option to provide us with authentication; if you select **LDAP** here, LDAP authentication will be used for authenticating. We will keep it as **System default**, which is the internal Zabbix authentication.
 
 3.	Now, let's navigate to the next tab on this page, which is **Permissions**:
 
-![img](file:///tmp/lu106935qboif.tmp/lu106935qbxdm_tmp_52846592e6bbe782.jpg) 
+![img](pics/pic2-4.png)
 
-Figure 2.4 – The Zabbix User groups Permissions configuration window
+_Figure 2.4 – The Zabbix User groups Permissions configuration window_
 
 Here, we can specify what host groups our group will have access to. There's a default host group for **Networking** already, which we will use in this example.
 
@@ -94,23 +84,23 @@ When using Zabbix authentication such as HTTP, LDAP, or SAML, we still need to c
 
 ​	Now we will have a new host group called **Networking** that is only allowed to read and write to the **Templates/Network devices** host group:
 
-![img](file:///tmp/lu106935qboif.tmp/lu106935qbxdm_tmp_fab9bc13aaa60c21.jpg) 
- Figure 2.5 – The Zabbix User groups window
+![img](pics/pic2-5.png)
+
+_Figure 2.5 – The Zabbix User groups window_
 
 1. ​		Let's 	repeat this process for the **Infrastructure** 	host group, except instead of adding the **Templates/Network 	devices** 	host group, we'll add the **Linux 	servers** 	host group, like this:
 
-![](file:///tmp/lu106935qboif.tmp/lu106935qbxdm_tmp_8739abbb16d95e79.jpg) 
- 	
+![img](pics/pic2-6.png)
 
-Figure 2.6 – The Zabbix User groups Permissions configuration window with one host group
+_Figure 2.6 – The Zabbix User groups Permissions configuration window with one host group_
 
 1. Click 	**Add** 	to save this host group.
 
 1. ​		Repeat 	the steps again and to add **Buying 	and Inventory**, 	we'll do something differently. We'll repeat the process we've just 	done except for the part with the permissions. We want **Buying 	and Inventory** 	to be able to read our inventory data, but we don't want them to 	actually change our host configuration. Add both **Templates/Network 	devices** 	and **Linux 	servers** 	to the group, but with only **Read** 	permissions like this:
 
-![img](file:///tmp/lu106935qboif.tmp/lu106935qbxdm_tmp_6e891afc221f1a31.png) 
+![img](pics/pic2-7.png)
 
-Figure 2.7 – The Zabbix User groups Permissions configuration window with two host groups
+_Figure 2.7 – The Zabbix User groups Permissions configuration window with two host groups_
 
 Congratulations! Finishing this means you've ended up with three different host groups and we can continue to create our first new users! Let's get to it.
 
@@ -140,21 +130,17 @@ For this recipe, we will need a Zabbix server, preferably the one set up in the 
 
 1. ​	First, navigate to the Zabbix frontend and go to **Administration** | **User roles**. This will show us the default user roles as you know them from older Zabbix versions.
 
-![img](file:///tmp/lu106935qboif.tmp/lu106935qbxdm_tmp_2221cadc1c3f8f1.jpg) 
+![img](pics/pic2-8.png)
 
-Figure 2.8 – The default Zabbix User roles configuration window
+_Figure 2.8 – The default Zabbix User roles configuration window_
 
 1. Here, we can click on the blue **Create user role** button in the top-right corner.
 
 1. ​	We'll set up a new user role called User+ role. This role will be for Zabbix users that will only have read permissions, but who need more access than just the **Monitoring**, **Inventory**, and **Reports** navigational elements.
 
-Using the new Zabbix user roles	49
+![img](pics/pic2-9.png)
 
-![img](file:///tmp/lu106935qboif.tmp/lu106935qbxdm_tmp_dfe12b26b3a42877.png) 
-
-
-
-Figure 2.9 – The top part of a new Zabbix User role configuration window
+_Figure 2.9 – The top part of a new Zabbix User role configuration window_
 
 1. First things first, make sure to fill out **Name** as User+ role.
 
@@ -162,16 +148,15 @@ Figure 2.9 – The top part of a new Zabbix User role configuration window
 
 ​	6.	I specifically want this user role named User+ role to have the ability to access the maintenance page. Setting this up will look like this:
 
-![img](file:///tmp/lu106935qboif.tmp/lu106935qbxdm_tmp_28045e4d9d895185.jpg) 
- 	
+![img](pics/pic2-10.png)
 
-Figure 2.10 – A new Zabbix User+ role with access to Maintenance
+_Figure 2.10 – A new Zabbix User+ role with access to Maintenance_
 
 1. ​		Make 	sure to also change the **Access 	to actions** 	section of the form by deselecting **Manage 	scheduled reports** 	as follows:
 
-![img](file:///tmp/lu106935qboif.tmp/lu106935qbxdm_tmp_7c0a714638c3ff87.png) 
+![img](pics/pic2-11.png)
 
-Figure 2.11 – A new Zabbix User+ role with correct Access to actions settings
+_Figure 2.11 – A new Zabbix User+ role with correct Access to actions settings_
 
 1. ​	Last but not least, click on the blue **Add** button at the bottom of the form to add this new user role.
 
@@ -195,9 +180,9 @@ First, let's break down the options we have when creating user roles in Zabbix:
 
 Now, let's look at what we've changed between the user role called User role and the user role called User+ role. The default user role called User role has the following access to UI elements:
 
-![img](file:///tmp/lu106935qboif.tmp/lu106935qbxdm_tmp_f70f40fca7165eb2.jpg) 
+![img](pics/pic2-12.png)
 
-Figure 2.12 – Default Zabbix user role called User role Access to UI elements
+_Figure 2.12 – Default Zabbix user role called User role Access to UI elements_
 
 By default, we have three user roles in Zabbix 6, which mirror the user types that are available. The user role we see here in **Name** mirrors the user type we have called User. It gives us access to the UI elements seen above, restricting the user role called User role to only be able to see certain things and make no configuration changes.
 
@@ -205,9 +190,9 @@ For example, it's considered an impactful permission to be able to set **Mainten
 
 Now, let's see what we did by creating a new user role called User+ role:
 
-![img](file:///tmp/lu106935qboif.tmp/lu106935qbxdm_tmp_aa7d0d861e201b32.jpg) 
+![img](pics/pic2-13.png)
 
-Figure 2.13 – New Zabbix user role called User+ role Access to UI elements
+_Figure 2.13 – New Zabbix user role called User+ role Access to UI elements_
 
 Here, we can see what happens if we change the user type to **Admin** but do not select all the available **Access to UI elements**. We now have a user role with no access to important configuration pages, but with access to **Maintenance**.
 
@@ -215,7 +200,7 @@ Combining that with the settings for **Access to actions**, where we added the *
 
 When we assign this role to a user in the next recipe and log in to that user, we will be able to see the following in our Zabbix sidebar.
 
-![img](file:///tmp/lu106935qboif.tmp/lu106935qbxdm_tmp_96964685a8bc0d1a.jpg) 
+![img](pics/pic2-14.png)
 
 Figure 2.14 – Custom User role Zabbix sidebar
 
@@ -239,11 +224,9 @@ So, let's start the configuration.
 
 Now we know there are three departments in the company called **Cloud Hoster** that are going to use our Zabbix installation. We've created host groups for them but there are also users in those departments that actually want to use our installation. Let's meet them:
 
-![img](file:///tmp/lu106935qboif.tmp/lu106935qbxdm_tmp_2730c8eb90f0e93.jpg) 
+![img](pics/pic2-15.png)
 
-
-
-Figure 2.15 – Cloud Hoster users diagram
+_Figure 2.15 – Cloud Hoster users diagram_
 
 These are the users we need to configure for **Cloud Hoster** to use.
 
@@ -253,15 +236,15 @@ Let's start creating the users. We will start with our **Networking** department
 
 1.	Navigate to **Administration** | **Users**, which will bring you to this page:
 
-![img](file:///tmp/lu106935qboif.tmp/lu106935qbxdm_tmp_d50c0ad5363f06df.jpg) 
+![img](pics/pic2-16.png)
 
-Figure 2.16 – The Zabbix Users window
+_Figure 2.16 – The Zabbix Users window_
 
 1. ​	This is where all the user creation magic is happening, as we will be managing all of our users from this page. To create our first **Networking** department user named s_network, click the **Create user** button in the top-right corner, bringing us to the following screen:
 
-![img](file:///tmp/lu106935qboif.tmp/lu106935qbxdm_tmp_2f758a4139a7406.jpg) 
+![img](pics/pic2-17.png)
 
-Figure 2.17 – The Zabbix Users configuration window
+_Figure 2.17 – The Zabbix Users configuration window_
 
 1. ​	Fill out **Username** to provide us with the username this user will be using, which will be s_network.
 
@@ -271,48 +254,47 @@ Figure 2.17 – The Zabbix Users configuration window
 
 1. After this, move on to the **Permissions** tab as we won't be configuring **Media** just yet:
 
-![img](file:///tmp/lu106935qboif.tmp/lu106935qbxdm_tmp_fb6fc021c509a334.jpg) 
+![img](pics/pic2-18.png)
 
-Figure 2.18 – The Zabbix user Permissions configuration window
+_Figure 2.18 – The Zabbix user Permissions configuration window_
 
 1. ​	Select the **Role** option named **Super admin role** here. This will enable our user to access all UI elements and see and edit information about all host groups in the Zabbix server.
 
 The following user roles are available in Zabbix by default:
 
-![img](file:///tmp/lu106935qboif.tmp/lu106935qbxdm_tmp_26556b3248482b79.jpg) 
+![img](pics/pic2-19.png)
 
-
-Figure 2.19 – A table detailing the different Zabbix user roles
+_Figure 2.19 – A table detailing the different Zabbix user roles_
 
 1. ​		Let's 	repeat the previous steps for the user named 	y_network 	but in the **Permissions** 	tab, select the **Admin 	role** 	option like this:
 
-![img](file:///tmp/lu106935qboif.tmp/lu106935qbxdm_tmp_6e8c6abc75947600.jpg) 
- 	
+![img](pics/pic2-20.png)
 
-Figure 2.20 – The Zabbix user Permissions configuration window
+_Figure 2.20 – The Zabbix user Permissions configuration window_
 
 After creating these two users, let's move on to create the infrastructure user,
 
 ​	r_ infra. Repeat the steps we took for s_network, changing the **Username**, of course. Then, add this user to the group and give our user the right permissions. Click **Select** and pick our group called **Infrastructure**. It will look like this:
 
-![img](file:///tmp/lu106935qboif.tmp/lu106935qbxdm_tmp_ba0a4e7215c0ee17.jpg) 
-Figure 2.21 – The Zabbix user configuration window for r_infra
+![img](pics/pic2-21.png)
+
+_Figure 2.21 – The Zabbix user configuration window for r_infra_
 
 Lastly, make this user another **Super admin**.
 
 1. ​	Now, for our last user, let's repeat our steps again, changing the **Username** and the group in the **User** tab like this:
 
-![img](file:///tmp/lu106935qboif.tmp/lu106935qbxdm_tmp_34853d59983e824c.jpg) 
+![img](pics/pic2-22.png)
 
-Figure 2.22 – The Zabbix User configuration window for e_buy
+_Figure 2.22 – The Zabbix User configuration window for e_buy_
 
 1. ​	Getting Things Ready with Zabbix User Management
 
 1. 1. ​		If 	you didn't follow the previous recipe, you can change this user's 	**Role** 	to 	User role 	at the **Permissions** 	tab. But if you did follow the previous recipe, we can use 	the 	User+ role 	we created like this:
 
-![img](file:///tmp/lu106935qboif.tmp/lu106935qbxdm_tmp_3926ff9407ff857b.jpg) 
+![img](pics/pic2-23.png)
 
-Figure 2.23 – The Zabbix user configuration window for e_buy
+_Figure 2.23 – The Zabbix user configuration window for e_buy_
 
 Setting the user up with the User+ role will also let the user e_buy create maintenance periods.
 
@@ -338,16 +320,15 @@ Make sure to set up users in your (Azure) AD before continuing with this recipe.
 
 We will be using the s_network user as an example:
 
-![img](file:///tmp/lu106935qboif.tmp/lu106935qbxdm_tmp_f1bd877841825130.jpg) 
+![img](pics/pic2-24.png)
 
-Figure 2.24 – The Azure Users and groups window
+_Figure 2.24 – The Azure Users and groups window_
 
 These are our user details:
 
-![img](file:///tmp/lu106935qboif.tmp/lu106935qbxdm_tmp_73e7b03ce97b960e.jpg) 
+![img](pics/pic2-25.png)
 
-
-Figure 2.25 – The Azure user details window
+_Figure 2.25 – The Azure user details window_
 
 To set up SAML, retrieve your SAML settings from your AD or another SAML provider.
 
@@ -375,21 +356,21 @@ Now that we have our Azure AD ready, let's see how we can configure SAML using o
 
 1. ​	Now click on **+ New Application** to create our new application. At the next window, click on **Create your own application**:
 
-![img](file:///tmp/lu106935qboif.tmp/lu106935qbxdm_tmp_a3c335cf8f313663.jpg) 
+![img](pics/pic2-26.png)
 
-Figure 2.26 – The Azure enterprise application creation page
+_Figure 2.26 – The Azure enterprise application creation page_
 
 1. ​	In the next window, name your new application Zabbix and click on the blue **Create** button:
 
-![img](file:///tmp/lu106935qboif.tmp/lu106935qbxdm_tmp_b235634956172b9b.jpg) 
+![img](pics/pic2-27.png)
 
-Figure 2.27 – The Azure enterprise new application page
+_Figure 2.27 – The Azure enterprise new application page_
 
 1. ​	Select your new application from the list and click on **Assign Users and Groups** to add the correct users. In our case, this will be s_network:
 
-![img](file:///tmp/lu106935qboif.tmp/lu106935qbxdm_tmp_e9defd836ee035e2.jpg) 
+![img](pics/pic2-28.png)
 
-Figure 2.28 – The Azure enterprise application Users and Groups page
+_Figure 2.28 – The Azure enterprise application Users and Groups page_
 
 1. Click on **Select** and then **Assign**.
 
@@ -397,34 +378,29 @@ Figure 2.28 – The Azure enterprise application Users and Groups page
 
 1. Now click on **SAML** on the page shown in the following screenshot and continue:
 
-![img](file:///tmp/lu106935qboif.tmp/lu106935qbxdm_tmp_e7fb675140c405c0.jpg) 
+![img](pics/pic2-29.png)
 
-
- Figure 2.29 – The Azure enterprise application SAML option
+_Figure 2.29 – The Azure enterprise application SAML option_
 
 1. ​	Getting Things Ready with Zabbix User Management
 
 1. 1. ​		Now 	at **1**, 	we can add the following information, where the black marks are our 	Zabbix server URL:
 
-![img](file:///tmp/lu106935qboif.tmp/lu106935qbxdm_tmp_297a5eb925afc559.jpg) 
+![img](pics/pic2-30.png)
 
-
-
-Figure 2.30 – The Azure SAML setting 1
-
-
+_Figure 2.30 – The Azure SAML setting 1_
 
 10. At **2**, fill out the following:
 
-![img](file:///tmp/lu106935qboif.tmp/lu106935qbxdm_tmp_c0fe9313884143c5.jpg) 
+![img](pics/pic2-31.png)
 
-Figure 2.31 – The Azure SAML setting 2
+_Figure 2.31 – The Azure SAML setting 2_
 
 11. Number **3** will be automatically filled. Click on **Download** for **Certificate (Base64)**:
 
-![img](file:///tmp/lu106935qboif.tmp/lu106935qbxdm_tmp_7a2c51c68dd2ea7c.jpg) 
+![img](pics/pic2-32.png)
 
-Figure 2.32 – The Azure SAML setting 3
+_Figure 2.32 – The Azure SAML setting 3_
 
 1. ​	Log in to the Zabbix server CLI and create a new file with the following command: **vim /usr/share/zabbix/conf/certs/idp.cert**
 
@@ -434,33 +410,29 @@ Advanced user authentication with SAML	65
 
 14. Now back at Azure for **4**, we will get the following information:
 
-![img](file:///tmp/lu106935qboif.tmp/lu106935qbxdm_tmp_801544ce82d60a8.jpg) 
+![img](pics/pic2-33.png)
 
-
-
-Figure 2.33 – The Azure SAML setting 4
+_Figure 2.33 – The Azure SAML setting 4_
 
 1. ​	At the Zabbix frontend, go to the **Administration** | **Authentication** | **SAML settings** page and fill in the following information and click on **Update**:
 
-![img](file:///tmp/lu106935qboif.tmp/lu106935qbxdm_tmp_713c84d8e8bd6cb2.jpg) 
+![img](pics/pic2-34.png)
 
-Figure 2.34 – The Zabbix SAML settings
+_Figure 2.34 – The Zabbix SAML settings_
 
 1. ​	Getting Things Ready with Zabbix User Management
 
 1. 1. ​		Navigate 	to **Administration** 	| **Users** 	and change the 	s_network 	user to include the used Azure domain, for example:
 
-![img](file:///tmp/lu106935qboif.tmp/lu106935qbxdm_tmp_94c893239fc2a23b.jpg) 
+![img](pics/pic2-35.png)
 
-
-
-Figure 2.35 – The Zabbix edit user screen for our SAML setup
+_Figure 2.35 – The Zabbix edit user screen for our SAML setup_
 
 1. ​	After following these steps, it should now be possible to log in with your user configured in Zabbix and use the password set in Azure AD for this:
 
-![img](file:///tmp/lu106935qboif.tmp/lu106935qbxdm_tmp_7ccfc0c144116d95.jpg) 
+![img](pics/pic2-36.png)
 
-Figure 2.36 – The Zabbix login window
+_Figure 2.36 – The Zabbix login window_
 
 **How it works…**
 
@@ -468,9 +440,9 @@ Zabbix advanced user authentication is used to centralize password management. W
 
 This way, we can make sure it is easier for users to keep their passwords centralized in medium to big office environments:
 
-![img](file:///tmp/lu106935qboif.tmp/lu106935qbxdm_tmp_519e747763abf493.jpg) 
+![img](pics/pic2-37.png)
 
-Figure 2.37 – Zabbix SAML authentication diagram
+_Figure 2.37 – Zabbix SAML authentication diagram_
 
 Zabbix communicates with our Azure AD SAML component when we click the **Sign in** button. The user is then authenticated against your Azure AD user and a confirmation is sent back to the Zabbix server. Congratulations, you are now logged in to your Zabbix server!
 
