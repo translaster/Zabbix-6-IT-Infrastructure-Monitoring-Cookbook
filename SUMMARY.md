@@ -2,26 +2,26 @@
 
 [Глава 1. Установка Zabbix и начало работы с использованием фронтенда](chapter-01.md)
 
-2. Getting Things Ready with Zabbix User Management
+[Глава2. Подготовка к работе с помощью Zabbix User Management](chapter-02.md)
 
-3. Setting Up Zabbix Monitoring
+Глава 3. Настройка мониторинга Zabbix
 
-4. Working with Triggers and Alerts
+Глава 4. Работа с триггерами и оповещениями
 
-5. Building Your Own Structured Templates
+Глава 5. Создание собственных структурированных шаблонов
 
-6. Visualizing Data, Inventory, and Reporting
+Глава 6. Визуализация данных, инвентаризация и отчетность
 
-7. Using Discovery for Automatic Creation
+Глава 7. Использование Discovery для автоматического создания
 
-8. Setting Up Zabbix Proxies
+Глава 8. Настройка прокси-серверов Zabbix
 
-9. Integrating Zabbix with External Services
+Глава 9. Интеграция Zabbix с внешними службами
 
-10. Extending Zabbix Functionality with Custom Scripts and the Zabbix API
+Глава 10. Расширение функциональности Zabbix с помощью пользовательских сценариев и Zabbix API
 
-11. Maintaining Your Zabbix Setup
+Глава 11. Обслуживание вашей установки Zabbix
 
-12. Advanced Zabbix Database Management
+Глава 12. Расширенное управление базой данных Zabbix
 
-13. Bringing Zabbix to the Cloud with Zabbix Cloud Integration
+Глава 13. Перенос Zabbix в облако с помощью Zabbix Cloud Integration

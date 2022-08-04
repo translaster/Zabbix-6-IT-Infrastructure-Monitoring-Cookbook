@@ -1,4 +1,4 @@
-# Getting Things Ready with Zabbix User Management
+# Подготовка к работе с помощью Zabbix User Management
 
 In this chapter, we will work on creating our first user groups, users, and user roles. It's very important to set these up in the correct manner, as they will give people access to your Zabbix environment with the correct permissions. By going over these things step by step, we will make sure we have a structured Zabbix setup before continuing on with this book.
 
