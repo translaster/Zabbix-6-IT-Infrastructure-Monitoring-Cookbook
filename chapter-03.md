@@ -1145,7 +1145,7 @@ Zabbix database.
 
 **Tip**
 
-It's a lot easier to build a regex when using an online tool such as https:// regex101.com/. You can see what number your capture groups will get, and there's a lot of valuable information in the tools as well.
+It's a lot easier to build a regex when using an online tool such as https://regex101.com/. You can see what number your capture groups will get, and there's a lot of valuable information in the tools as well.
 
 It's important to note here that steps are executed in the sequence they are defined in the frontend. If the first step fails, the item becomes unsupported unless Custom on fail is set to do something else.
 
