@@ -2,7 +2,7 @@
 
 [Глава 1. Установка Zabbix и начало работы с использованием фронтенда](chapter-01.md)
 
-[Глава2. Подготовка к работе с помощью Zabbix User Management](chapter-02.md)
+[Глава 2. Подготовка к работе с помощью Zabbix User Management](chapter-02.md)
 
 Глава 3. Настройка мониторинга Zabbix
 
